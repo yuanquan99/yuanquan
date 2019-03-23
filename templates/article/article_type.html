@@ -1,0 +1,19 @@
+{% extends 'template.html' %}
+
+{% block title %}
+    article
+{% endblock %}
+
+{% block body %}
+    {% for article in articles %}
+        <a href="{% url 'article_detail' article.pk %}">
+            <h3>{{ article.title }}</h3>
+        </a>
+        <p>{{ article.content | truncatechars:50 }}</p>
+
+    {% empty %}
+        <p>作者还没写博客呢</p>
+    {% endfor %}
+
+    <p>一共有{{ articles|length }}篇文章</p>
+{% endblock %}
