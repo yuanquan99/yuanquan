@@ -1,0 +1,56 @@
+{% extends "template.html" %}
+{% block title %}注册{% endblock %}
+
+{% block body %}
+
+<div class="layui-container fly-marginTop">
+    <div class="fly-panel fly-panel-user" pad20>
+        <div class="layui-tab layui-tab-brief" lay-filter="user">
+            <ul class="layui-tab-title">
+                <li><a href={% url "login" %}>登入</a></li>
+                <li class="layui-this">注册</li>
+            </ul>
+            <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-form layui-form-pane">
+
+
+{#                            <div class="layui-form-item">#}
+{#                                <label for="L_vercode" class="layui-form-label">人类验证</label>#}
+{#                                <div class="layui-input-inline">#}
+{#                                    <input type="text" id="L_vercode" name="vercode" required lay-verify="required"#}
+{#                                           placeholder="请回答后面的问题" autocomplete="off" class="layui-input">#}
+{#                                </div>#}
+{#                                <div class="layui-form-mid">#}
+{#                                    <span style="color: #c00;">{{ d.vercode }}</span>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="layui-form-item fly-form-app">#}
+{#                                <span>或者直接使用社交账号快捷注册</span>#}
+{#                                <a href="" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})"#}
+{#                                   class="iconfont icon-qq" title="QQ登入"></a>#}
+{#                                <a href="" onclick="layer.msg('正在通过微博登入', {icon:16, shade: 0.1, time:0})"#}
+{#                                   class="iconfont icon-weibo" title="微博登入"></a>#}
+{#                            </div>#}
+
+                        <form method="post">
+                            {% csrf_token %}
+                            {% for field in reg_form %}
+                                <div class="layui-form-item">
+                                    <label for="L_email" class="layui-form-label">{{ field.label }}</label>
+                                    <div class="layui-input-inline">{{ field }}</div>
+                                </div>
+                            {% empty %}
+                            {% endfor %}
+                            <div class="layui-form-item">
+                                <button class="layui-btn" lay-filter="*" lay-submit>注册</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
