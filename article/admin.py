@@ -16,7 +16,9 @@ class ArticleAdmin(admin.ModelAdmin):
         'type',
         'create_time',
         'update_time',
+        'is_stick',
         'is_deleted',
+
     ]
     ordering = ['id'] # 倒序‘-id’
 
