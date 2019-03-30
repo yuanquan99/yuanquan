@@ -19,9 +19,14 @@ class Article(models.Model):
     # 默认与User 里 pk=1的用户关联
     type = models.ForeignKey(ArticleType, on_delete=models.DO_NOTHING, default=1)
     read_num = models.IntegerField(default=0)
+    comment_num = models.IntegerField(default=0)
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
+    is_stick = models.BooleanField(default=False)
 
     def __str__(self):
         return '%s' % self.title
+
+    class Meta:
+        ordering = ['-create_time']
