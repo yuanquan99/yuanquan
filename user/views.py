@@ -1,7 +1,9 @@
-from django.shortcuts import redirect, render, render_to_response
+from django.shortcuts import redirect, render, HttpResponse
 from django.contrib import auth
+from django.urls import reverse
 from .forms import LoginForm, RegisterFrom
 from django.contrib.auth import get_user_model
+from article.models import Article
 
 User = get_user_model()
 
@@ -14,13 +16,19 @@ def login(request):
         if login_form.is_valid():
             user = login_form.cleaned_data['user']
             auth.login(request, user)
-            return credits('home')
+            print('login success!')
+            return redirect(request.GET.get('from', reverse('home')))
 
     login_form = LoginForm()
     context = {
         'login_form': login_form,
     }
     return render(request, 'user/login.html', context=context)
+
+
+def logout(request):
+    auth.logout(request)
+    return HttpResponse('您已成功注销')
 
 
 def register(request):
@@ -33,7 +41,7 @@ def register(request):
             user = User.objects.create_user(username, email, password)
             user.save()
             user = auth.authenticate(username=username, password=password)
-            return redirect('home')
+            return render(request, 'index.html')
     reg_form = RegisterFrom()
     context = {
         'reg_form': reg_form,
@@ -42,16 +50,25 @@ def register(request):
 
 
 def home(request):
-    return render_to_response("user/home.html")
+    context = {
+
+    }
+    return render(request, "user/home.html", context=context)
 
 
 def index(request):
-    return render_to_response('user/index.html')
+    stick_article = Article.objects.all()
+    article = Article.objects.filter(is_stick=False)
+    context = {
+        'stick_article': stick_article,
+        'article': article,
+    }
+    return render(request, 'user/index.html', context=context)
 
 
 def settings(request):
-    return render_to_response('user/set.html')
+    return render(request, 'user/set.html')
 
 
 def message(request):
-    return render_to_response('user/message.html')
+    return render(request, 'user/message.html')
