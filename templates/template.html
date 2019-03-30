@@ -22,22 +22,40 @@
                 <a href="http://acm.hnust.edu.cn"><i class="iconfont icon-iconmingxinganli"></i>Online Judge</a>
             </li>
             <li class="layui-nav-item">
-                <a href="http://www.layui.com/" target="_blank"><i class="iconfont icon-ui"></i>ACM荣誉墙</a>
+                <a href="https://github.com/yuanquan99/yuanquan" target="_blank"><i class="layui-icon layui-icon-fonts-code">&#xe64e</i>项目源码</a>
             </li>
         </ul>
-
         <ul class="layui-nav fly-nav-user">
-            <!-- 未登入的状态 -->
-            <li class="layui-nav-item">
-                <a class="iconfont icon-touxiang layui-hide-xs" href={% url "login" %}></a>
-            </li>
-            <li class="layui-nav-item">
-                <a href={% url "login" %}>登入</a>
-            </li>
-            <li class="layui-nav-item">
-                <a href={% url "register" %}>注册</a>
-            </li>
-
+            {% if request.user.is_authenticated %}
+                <li class="layui-nav-item">
+                    <a class="fly-nav-avatar" href={% url "user_home" %} >
+                        <cite class="layui-hide-xs">{{ user }}</cite>
+                        <i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：layui 作者"></i>
+                        <i class="layui-badge fly-badge-vip layui-hide-xs">VIP3</i>
+                        <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="{% url 'settings' %}"><i class="layui-icon">&#xe620;</i>基本设置</a></dd>
+                        <dd><a href={% url 'message' %}><i class="iconfont icon-tongzhi" style="top: 4px;"></i>我的消息</a></dd>
+                        <dd><a href={% url 'user_home' %}><i class="layui-icon" style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a></dd>
+                        <hr style="margin: 5px 0;">
+                        <dd>
+                            <a href={% url 'logout' %} style="text-align: center;">退出登录</a>
+                        </dd>
+                    </dl>
+                </li>
+            {% else %}
+                <!-- 未登入的状态 -->
+                <li class="layui-nav-item">
+                    <a class="iconfont icon-touxiang layui-hide-xs" href={% url "login" %}></a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href={% url "login" %}>登入</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href={% url "register" %}>注册</a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 </div>
@@ -46,12 +64,12 @@
 
 
 <div class="fly-footer">
-    <p><a href="http://fly.layui.com/" target="_blank">HNUST ACM</a>2019 &copy;<a href="http://www.layui.com/"
-                                                                                target="_blank">layui.com 出品</a></p>
+    <p><a href="http://fly.layui.com/" target="_blank">HNUST ACM</a>2019 &copy; yuanquan.ac 出品</p>
+    <p>社区使用开源前端 <a href="http://fly.layui.com">Layui</a> </p>
     <p>
-        <a href="http://fly.layui.com/jie/3147/" target="_blank">Online Judge</a>
-        <a href="http://www.layui.com/template/fly/" target="_blank">获取Fly社区模版</a>
-        <a href="http://fly.layui.com/jie/2461/" target="_blank">微信公众号</a>
+        <a href="http://fly.layui.com/jie/3147/" target="_blank">AACCCC</a>
+        <a href="https://github.com/yuanquan99/yuanquan" target="_blank">获取源代码</a>
+        <a href="http://fly.layui.com/jie/2461/" target="_blank">关于作者</a>
     </p>
 </div>
 
@@ -61,13 +79,13 @@
     layui.cache.user = {
         username: '游客'
         , uid: -1
-        , avatar: '../../res/images/avatar/00.jpg'
+        , avatar: '/static/res/images/avatar/00.jpg'
         , experience: 83
         , sex: '男'
     };
     layui.config({
         version: "3.0.0"
-        , base: '../../res/mods/'
+        , base: '/static/res/mods/'
     }).extend({
         fly: 'index'
     }).use('fly');
