@@ -59,7 +59,7 @@ class RegisterFrom(forms.Form):
             raise forms.ValidationError('用户名已存在')
         return username
 
-    def clean_password(self):
+    def clean_password_again(self):
         password = self.cleaned_data['password']
         passord_again = self.cleaned_data['password_again']
         if password != passord_again:
