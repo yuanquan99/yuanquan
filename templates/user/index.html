@@ -1,5 +1,8 @@
 {% extends "template.html" %}
 {% block title %} 我的 {% endblock %}
+{% block add_head %}
+    <link rel="stylesheet" href="/static/css/test.css">
+{% endblock %}
 
 {% block body %}
     <div class="layui-container fly-marginTop fly-user-main">
@@ -49,45 +52,157 @@
             -->
             <div class="layui-tab layui-tab-brief" lay-filter="user">
                 <ul class="layui-tab-title" id="LAY_mine">
-                    <li data-type="mine-jie" lay-id="index" class="layui-this">我发的帖（<span>89</span>）</li>
+                    <li data-type="mine-jie" lay-id="index" class="layui-this">我发的帖（<span>{{ articles|length }}</span>）
+                    </li>
                     <li data-type="collection" data-url="/collection/find/" lay-id="collection">我收藏的帖（<span>16</span>）
                     </li>
                 </ul>
                 <div class="layui-tab-content" style="padding: 20px 0;">
-                    <div class="layui-tab-item layui-show">
-                        <ul class="mine-view jie-row">
-                            <li>
-                                <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-                                <i>2017/3/14 上午8:30:00</i>
-                                <a class="mine-edit" href="/jie/edit/8116">编辑</a>
-                                <em>661阅/10答</em>
-                            </li>
-                            <li>
-                                <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-                                <i>2017/3/14 上午8:30:00</i>
-                                <a class="mine-edit" href="/jie/edit/8116">编辑</a>
-                                <em>661阅/10答</em>
-                            </li>
-                            <li>
-                                <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-                                <i>2017/3/14 上午8:30:00</i>
-                                <a class="mine-edit" href="/jie/edit/8116">编辑</a>
-                                <em>661阅/10答</em>
-                            </li>
-                        </ul>
-                        <div id="LAY_page"></div>
-                    </div>
+                    <div class="layui-tab-content layui-tab-item layui-show" id="LAY_ucm" style="padding: 5px 0;">
+                        <table class="layui-hide" id="LAY_mySendCard" ></table>
+                        <div class="layui-form layui-border-box layui-table-view" lay-filter="LAY-table-1"
+                             lay-id="LAY_mySendCard" style=" ">
+
+                            <div class="layui-table-header">
+                                <table cellspacing="0" cellpadding="0" border="0" class="layui-table"
+                                       lay-skin="line" style="width: 100%">
+                                    <thead>
+                                    <tr>
+                                        <th data-field="title" data-key="1-0-0" data-minwidth="300"
+                                            class="">
+                                            <div class="layui-table-cell laytable-cell-1-0-0">
+                                                <span>帖子标题</span>
+                                            </div>
+                                        </th>
+                                        <th data-field="status" data-key="1-0-1" class="">
+                                            <div class="layui-table-cell laytable-cell-1-0-1"
+                                                 align="center"><span>状态</span>
+                                            </div>
+                                        </th>
+
+                                        <th data-field="time" data-key="1-0-3" class="">
+                                            <div class="layui-table-cell laytable-cell-1-0-2"
+                                                 align="center">
+                                                <span>发表时间</span>
+                                            </div>
+                                        </th>
+                                        <th data-field="4" data-key="1-0-4"
+                                            class=" layui-table-col-special">
+                                            <div class="layui-table-cell laytable-cell-1-0-3"
+                                                 align="center">
+                                                <span>数据</span>
+                                            </div>
+                                        </th>
+                                        <th data-field="5" data-key="1-0-5"
+                                            class=" layui-table-col-special">
+                                            <div class="layui-table-cell laytable-cell-1-0-4"
+                                                 align="center">
+                                                <span>操作</span>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    </thead>
+
+                                    {% for article in articles %}
+                                        <!--
+                                        <li>
+                                            <a class="jie-title" href="{% url "article_detail" article.pk %}"
+                                               target="_blank">{{ article.title }}</a>
+                                            <i>{{ article.create_time }}</i>
+                                            <a class="mine-edit" href="/jie/edit/8116">编辑</a>
+                                            <em>661阅 / {{ article.read_num }}答 / 0赞</em>
+                                        </li>
+                                        -->
+
+                                        <tr data-index="0" class="">
+                                            <td data-field="title" data-key="1-0-0"
+                                                data-content={{ article.title }} data-minwidth="300"
+                                                class="">
+                                                <div class="layui-table-cell laytable-cell-1-0-0"><a
+                                                        href="{% url "article_detail" article.pk %}"
+                                                        target="_blank"
+                                                        class="layui-table-link">{{ article.title }}</a>
+                                                </div>
+                                            </td>
+                                            <td data-field="status" data-key="1-0-1" align="center"
+                                                data-content="0">
+                                                <div class="layui-table-cell laytable-cell-1-0-1"><span
+                                                        style="color: #999;">正常</span></div>
+                                            </td>
+                                            <td data-field="time" data-key="1-0-2" align="center">
+                                                <div class="layui-table-cell laytable-cell-1-0-3">{{ article.create_time }}</div>
+                                            </td>
+                                            <td data-field="4" data-key="1-0-3" data-content=""
+                                                class="layui-table-col-special" align="center">
+                                                <div class="layui-table-cell laytable-cell-1-0-4"><span
+                                                        style="font-size: 12px;">1阅 / 0答</span></div>
+                                            </td>
+                                            <td data-field="5" data-key="1-0-4" data-content=""
+                                                class="layui-table-col-special" align="center">
+                                                <div class="layui-table-cell laytable-cell-1-0-5">
+                                                    <a class="layui-btn layui-btn-xs" href=""
+                                                       target="_blank">编辑</a>
+                                                    <a class="layui-btn layui-btn-xs" href=""
+                                                       target="_blank">删除</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                            <!--
+                                <div class="layui-table-body layui-table-main">
+                                    <table cellspacing="0" cellpadding="0" border="0" class="layui-table"
+                                           lay-skin="line">
+                                        <tbody></tbody>
+                                    </table>
+                                    <div class="layui-none">无数据</div>
+                                </div>
+                            -->
+                        </div>
+
+                    </div>  <!-- 列表 -->
+
                     <div class="layui-tab-item">
-                        <ul class="mine-view jie-row">
-                            <li>
-                                <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
-                                <i>收藏于23小时前</i></li>
-                        </ul>
-                        <div id="LAY_page1"></div>
+
+                        <div class="layui-form layui-border-box layui-table-view" lay-filter="LAY-table-4"
+                             lay-id="LAY_myCollectioncard">
+                            <div class="layui-table-box">
+                                <div class="layui-table-header">
+                                    <table cellspacing="0" cellpadding="0" border="0" class="layui-table"
+                                       lay-skin="line" style="width: 100%">
+                                        <thead>
+                                        <tr>
+                                            <th data-field="title" data-key="4-0-0" data-minwidth="700" class="">
+                                                <div class="layui-table-cell laytable-cell-4-0-0"><span>帖子标题</span>
+                                                </div>
+                                            </th>
+                                            <th data-field="collection_timestamp" data-key="4-0-1" class="">
+                                                <div class="layui-table-cell laytable-cell-4-0-1" align="center"><span>收藏时间</span>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div class="layui-table-body layui-table-main">
+                                    <table cellspacing="0" cellpadding="0" border="0" class="layui-table"
+                                           lay-skin="line">
+                                        <tbody></tbody>
+                                    </table>
+                                    <div class="layui-none">无数据</div>
+                                </div>
+                            </div>
+                            <div class="layui-table-page layui-hide">
+                                <div id="layui-table-page4"></div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 
 {% endblock %}

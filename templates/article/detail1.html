@@ -9,7 +9,7 @@
             <div class="layui-col-md9 content detail">
                 <div class="fly-panel detail-box">
                     <h1>
-                        {{ article.title }}
+                        Fly Template v3.0，基于 layui 的极简社区页面模版
                         &nbsp;&nbsp;
                         <span class="layui-badge layui-bg-black">置顶</span>
                         <span class="layui-badge layui-bg-red">精帖</span>
@@ -17,13 +17,13 @@
                     </h1>
 
                     <div class="detail-about" style="margin-top: 15px">
-                        <a class="fly-avatar" href={% url "user_home" %}>
+                        <a class="fly-avatar" href="../user/home.html">
                             <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
-                                 alt={{ article.author }}>
+                                 alt="yuanquan">
                         </a>
                         <div class="fly-detail-user">
-                            <a href={% url "user_info" %} class="fly-link">
-                                <cite>{{ article.author }}</cite>
+                            <a href="../user/home.html" class="fly-link">
+                                <cite>贤心</cite>
                                 <i class="iconfont icon-renzheng" title="认证信息：{{ rows.user.approve }}"></i>
                                 <i class="layui-badge fly-badge-vip">VIP3</i>
                             </a>
@@ -34,22 +34,40 @@
                     </div>
 
                     <div class="detail-body photos">
-                        <pre>{{ article.content }}</pre>
+                        <p>
+                            该模版由 layui官方社区（<a href="http://fly.layui.com/" target="_blank">fly.layui.com</a>）倾情提供，只为表明我们对
+                            layui 执着的信念、以及对未来持续加强的承诺。该模版基于 layui 搭建而成，可作为极简通用型社区的页面支撑。
+                        </p>
+                        <p>更新日志：</p>
+                        <pre>
+# v3.0 2017-11-30
+* 采用 layui 2.2.3 作为 UI 支撑
+* 全面同步最新的 Fly 社区风格，各种细节得到大幅优化
+* 更友好的响应式适配能力
+</pre>
+
+                        下载
+                        <hr>
+                        <p>
+                            官网：<a href="http://www.layui.com/template/fly/" target="_blank">http://www.layui.com/template/fly/</a><br>
+                            码云：<a href="https://gitee.com/sentsin/fly/"
+                                  target="_blank">https://gitee.com/sentsin/fly/</a><br>
+                            GitHub：<a href="https://github.com/layui/fly"
+                                      target="_blank">https://github.com/layui/fly</a>
+                        </p>
+                        封面
+                        <hr>
+                        <p>
+                            <img src="../../res/images/fly.jpg" alt="Fly社区">
+                        </p>
                     </div>
                 </div>
 
-                <div class="fly-panel detail-box">
+                <div class="fly-panel detail-box" id="flyReply">
+                    <fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
+                        <legend>回帖</legend>
+                    </fieldset>
 
-{#                    <div class="fly-panel detail-box" id="flyReply">#}
-{#                    <fieldset class="layui-elem-field layui-field-title" style="text-align: center;">#}
-{#                        <legend>回帖</legend>#}
-{#                    </fieldset>#}
-
-                    <div>
-                        <h2>1条回帖</h2>
-                        <hr>
-
-                    </div>
                     <ul class="jieda" id="jieda">
                         <li data-id="111" class="jieda-daan">
                             <a name="item-1111111111"></a>
@@ -83,14 +101,14 @@
                                 <p>香菇那个蓝瘦，这是一条被采纳的回帖</p>
                             </div>
                             <div class="jieda-reply">
-                              <span class="jieda-zan zanok" type="zan">
-                                <i class="iconfont icon-zan"></i>
-                                <em>66</em>
-                              </span>
+              <span class="jieda-zan zanok" type="zan">
+                <i class="iconfont icon-zan"></i>
+                <em>66</em>
+              </span>
                                 <span type="reply">
-                                <i class="iconfont icon-svgmoban53"></i>
-                                回复
-                                </span>
+                <i class="iconfont icon-svgmoban53"></i>
+                回复
+              </span>
                                 <div class="jieda-admin">
                                     <span type="edit">编辑</span>
                                     <span type="del">删除</span>

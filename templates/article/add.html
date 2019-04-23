@@ -83,4 +83,23 @@
         </div>
     </div>
 
+
 {% endblock %}
+
+<script src="/static/layui/layui.js"></script>
+<script>
+    layui.cache.page = 'jie';
+    layui.cache.user = {
+      username: '游客'
+      ,uid: -1
+      ,avatar: '/static/res/images/avatar/00.jpg'
+      ,experience: 83
+      ,sex: '男'
+    };
+    layui.config({
+        version: "3.0.0"
+        , base: '/static/res/mods/'
+    }).extend({
+        fly: 'index'
+    }).use('fly');
+</script>
