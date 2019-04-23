@@ -1,8 +1,6 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, Http404
 from django.core.paginator import Paginator
 from .models import Article, ArticleType
-# Create your views here.
 
 
 def article_detail(request, article_id):
@@ -19,19 +17,20 @@ def article_list(request):
     page_articles = paginate.get_page(request.GET.get('page', 1))
 
     context = {
-        'page_articles': page_articles,
+        'articles': page_articles,
     }
     return render(request, 'article/index.html', context)
 
 
-def article_type(request, article_type_id):
-    type = get_object_or_404(ArticleType, pk=article_type_id)
-    articles = Article.objects.filter(type=type, is_deleted=False)
+def article_type(request, classify_id):
+    classify = get_object_or_404(ArticleType, pk=classify_id)
+    articles = Article.objects.filter(type=classify, is_deleted=False)
     context = {
         'articles': articles,
     }
-    return render(request, 'article/article_type.html', context)
+    return render(request, 'article/index.html', context)
 
 
 def add_article(request):
     return render(request, 'article/add.html')
+

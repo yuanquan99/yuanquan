@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import home
-import user
+import user, article
 
 
 urlpatterns = [
@@ -26,5 +26,8 @@ urlpatterns = [
     path('user/', include('user.urls')),
     path('login/', user.views.login, name='login'),
     path('logout/', user.views.logout, name='logout'),
-    path('register/', user.views.register, name='register')
+    path('register/', user.views.register, name='register'),
+    path('search/', home.search, name='search'),
+    path('test/', home.test, name='test'),
+    path('classify/<int:classify_id>', article.views.article_type, name='classify_type'),
 ]

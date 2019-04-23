@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import Article
-from .models import ArticleType
+from .models import ArticleType, ArticleTag
 
 
 @admin.register(Article)
@@ -28,5 +28,12 @@ class TypeAdmin(admin.ModelAdmin):
     list_display = [
         'id',
         'type_name',
+        'is_delete',
     ]
+    ordering = ['id']
+
+
+@admin.register(ArticleTag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ['id', 'tag_name', 'is_delete']
     ordering = ['id']

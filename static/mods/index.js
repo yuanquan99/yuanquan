@@ -63,23 +63,7 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
 
       options = options || {};
 
-      return $.ajax({
-        type: options.type || 'post',
-        dataType: options.dataType || 'json',
-        data: data,
-        url: url,
-        success: function(res){
-          if(res.status === 0) {
-            success && success(res);
-          } else {
-            layer.msg(res.msg || res.code, {shift: 6});
-            options.error && options.error();
-          }
-        }, error: function(e){
-          layer.msg('请求异常，请重试', {shift: 6});
-          options.error && options.error(e);
-        }
-      });
+      return ;
     }
 
     //计算字符长度
@@ -276,37 +260,6 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
       return content;
     }
     
-    //新消息通知
-    ,newmsg: function(){
-      var elemUser = $('.fly-nav-user');
-      if(layui.cache.user.uid !== -1 && elemUser[0]){
-        fly.json('/message/nums/', {
-          _: new Date().getTime()
-        }, function(res){
-          if(res.status === 0 && res.count > 0){
-            var msg = $('<a class="fly-nav-msg" href="javascript:;">'+ res.count +'</a>');
-            elemUser.append(msg);
-            msg.on('click', function(){
-              fly.json('/message/read', {}, function(res){
-                if(res.status === 0){
-                  location.href = '/user/message/';
-                }
-              });
-            });
-            layer.tips('你有 '+ res.count +' 条未读消息', msg, {
-              tips: 3
-              ,tipsMore: true
-              ,fixed: true
-            });
-            msg.on('mouseenter', function(){
-              layer.closeAll('tips');
-            })
-          }
-        });
-      }
-      return arguments.callee;
-    }
-    
   };
 
   //签到
@@ -498,26 +451,23 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
       ,shadeClose: true
       ,maxWidth: 10000
       ,skin: 'fly-layer-search'
-      ,content: ['<form action="http://cn.bing.com/search">'
+      ,content: ['<form action="/search">'
         ,'<input autocomplete="off" placeholder="搜索内容，回车跳转" type="text" name="q">'
       ,'</form>'].join('')
       ,success: function(layero){
         var input = layero.find('input');
         input.focus();
-
         layero.find('form').submit(function(){
           var val = input.val();
           if(val.replace(/\s/g, '') === ''){
             return false;
           }
-          input.val('site:layui.com '+ input.val());
+          //input.val(input.val());
       });
       }
     })
   });
 
-  //新消息通知
-  fly.newmsg();
 
   //发送激活邮件
   fly.activate = function(email){
@@ -586,17 +536,6 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
     elem: '.fly-editor'
   });
 
-  //手机设备的简单适配
-  var treeMobile = $('.site-tree-mobile')
-  ,shadeMobile = $('.site-mobile-shade')
-
-  treeMobile.on('click', function(){
-    $('body').addClass('site-mobile');
-  });
-
-  shadeMobile.on('click', function(){
-    $('body').removeClass('site-mobile');
-  });
 
   //获取统计数据
   $('.fly-handles').each(function(){
@@ -612,8 +551,8 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
     ,bgcolor: '#009688'
     ,click: function(type){
       if(type === 'bar1'){
-        layer.msg('打开 index.js，开启发表新帖的路径');
-        //location.href = 'jie/add.html';
+
+        location.href = '/article/add';
       }
     }
   });
