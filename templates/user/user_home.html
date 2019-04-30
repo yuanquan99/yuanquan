@@ -6,18 +6,18 @@
 
 
     <div class="fly-home fly-panel">
-        <img src="{{ request.user.url }}"
-             alt="{{ request.user }}">
+        <img src="{{ query_user.url }}"
+             alt="{{ query_user.username }}">
         <i class="iconfont icon-renzheng" title="Fly社区认证"></i>
         <h1>
-            {{ request.user }}
+            {{ query_user }}
             <i class="iconfont icon-nan"></i>
 
             <!-- <i class="iconfont icon-nv"></i>  -->
 
             <i class="layui-badge fly-badge-vip">VIP3</i>
 
-            {% if request.user.is_superuser %}
+            {% if query_user.is_superuser %}
                 <span style="color:#c00;">（管理员）</span>
             {% endif %}
 
@@ -33,15 +33,15 @@
         <!--
             <i class="iconfont icon-kiss" title="飞吻"></i><span style="color: #FF7200;">66666 飞吻</span>
         -->
-            <i class="iconfont icon-shijian"></i><span>{{ user.date_joined }} 加入</span>
-            {% if request.user.city == "未知" %}
+            <i class="iconfont icon-shijian"></i><span>{{ query_user.date_joined }} 加入</span>
+            {% if query_user.city == "未知" %}
                 <i class="iconfont icon-chengshi"></i><span>未知城市</span>
             {% else %}
-                <i class="iconfont icon-chengshi"></i><span>来自{{ request.user.city }}</span>
+                <i class="iconfont icon-chengshi"></i><span>来自{{ query_user.city }}</span>
             {% endif %}
         </p>
 
-        <p class="fly-home-sign">{{ request.user.desc }}</p>
+        <p class="fly-home-sign">{{ query_user.desc }}</p>
         <!--
         <div class="fly-sns" data-user="">
             <a href="javascript:;" class="layui-btn layui-btn-primary fly-imActive" data-type="addFriend">加为好友</a>
@@ -55,7 +55,7 @@
         <div class="layui-row layui-col-space15">
             <div class="layui-col-md6 fly-home-jie">
                 <div class="fly-panel">
-                    <h3 class="fly-panel-title">我最近的帖子</h3>
+                    <h3 class="fly-panel-title">{{ query_user.username }} 最近的提问</h3>
                     <ul class="jie-row">
 
                         {% for article in articles %}
@@ -78,7 +78,7 @@
 
             <div class="layui-col-md6 fly-home-da">
                 <div class="fly-panel">
-                    <h3 class="fly-panel-title">我最近的回答</h3>
+                    <h3 class="fly-panel-title">{{ query_user.username }} 最近的回答</h3>
                     <ul class="home-jieda">
                         <li>
                             <p>

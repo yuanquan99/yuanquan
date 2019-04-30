@@ -1,10 +1,149 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'template.html' %}
 
-</body>
-</html>
+{% block title %}
+    关于ACM集训队
+{% endblock %}
+
+{% block body %}
+<div class="layui-container">
+    <fieldset class="layui-elem-field layui-field-title" style="margin: 40px 0; text-align: center">
+        <legend class="">湖南科技大学ACM集训队发展史</legend>
+    </fieldset>
+    <ul class="layui-timeline">
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2011.6</h3>
+                <p>
+                    计算机学院由吴海波与欧阳军林2位老师负责选拔并指导学生参加湘潭市及湖南省的程序设计大赛，取得了不错的成绩，扩大了影响，促成了ACM实验室的建立
+                </p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2011.7.7－8.26</h3>
+                <p>廖俊国副院长亲自筹划组建专门进行程序设计训练的“ACM实验室”，并指派向德生与陈燕晖2位老师具体负责实验室的管理与指导工作。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2011.9.14</h3>
+                <p>ACM实验室组织4个队（12人）在湖南农业大学参加2011年湖南省第七届“蓝狐杯”大学生计算机程序设计竞赛。由李坚、叶剑飞、夏凯组成的Noah队荣获二等奖1项。突破了前2年省赛只有三等奖的记录。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2012.4.8</h3>
+                <p>ACM实验室承办了首届湖南科技大学计算机程序设计大赛。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2012.5.27</h3>
+                <p>为了锻炼队伍，派出LOKY，Accepted，Ddiao，zenithal四支代表队参加湖南大学程序设计大赛，获得二等奖和三等奖各1项，其中LOKY队位于第3名，获得二等奖，Accepted队位于第6名，获得三等奖。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2012.5.19</h3>
+                <p>在湘潭市第四届大学生程序设计大赛暨2012年ACM国际大学生程序设计竞赛湘潭市邀请赛中。我校代表队在市赛中荣获一等奖1项、二等奖2项、三等奖2项及最佳女队奖1项。在ACM邀请赛中荣获三等奖2项及最佳女队奖1项。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2012.7.2－8.31</h3>
+                <p>组织程序设计暑期集训。本次暑期集训通过采用比赛积分制为10月的省赛选拨了15名队员。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2012.10.13</h3>
+                <p>在“蓝狐杯”湖南省第八届大学生计算机程序设计竞赛中取得了团体总分第四名的历史最好成绩，而且4支代表队全部获奖，包括二等奖3项和三等奖1项。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2012.9</h3>
+                <p>组织学生参加ACM国际大学生程序设计竞赛亚洲区域赛5个赛区的网络赛，并在天津赛区获得了一个参加现场赛的出线名额。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2012.10.20-10.21</h3>
+                <p>第37届ACM国际大学生程序设计竞赛亚洲区域赛天津站的比赛在天津理工大学举行，我校代表队LOKY队（由阮柳春、王相、郭化权3名同学组成）荣获银奖。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2012.12.21</h3>
+                <p>根据12月2日和12月16日举行的二场选拔赛的结果，ACM实验室确定了进入集训二队的队员名单。总共有21人入选。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2012.12</h3>
+                <p>在学院领导万启常书记的亲自协调下，将ACM实验室从535迁往117，并将不断改善实验室的条件。虽然我们的团队成员每年都在不断更新，但队员的新老交替并没有影响我们团队的战斗力。相反，在以老带新，互助合作、相互赶超的学术氛围中，我们团队的战斗力在不断加强。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2013.5.13</h3>
+                <p>在湘潭市第五届大学生程序设计大赛暨2013年ACM国际大学生程序设计竞赛湘潭多省邀请赛中。我校代表队在市赛中荣获一等奖2项、二等奖3项、三等奖2项。在ACM邀请赛中荣获二等奖4项及三等奖2项。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2013.5.26</h3>
+                <p>为备战省赛和分区赛锻炼队伍，派3支队伍参加湖南大学举办的2013年ACM/ICPC全国程序设计邀请赛，其中hnust_CodeBreak队获得铜奖1项。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2013年7－8月</h3>
+                <p>暑期集训。本次暑期集训通过采用比赛积分制为10月的省赛选拨了15名队员。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2013.10.13</h3>
+                <p>在湖南省第九届大学生计算机程序设计竞赛中取得了团体总分第三名的历史最好成绩，而且4支代表队全部获奖，包括一等奖1项，二等奖2项和三等奖1项。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2013.9</h3>
+                <p>组织学生参加ACM国际大学生程序设计竞赛亚洲区域赛5个赛区的网络赛，并在长沙赛区获得了2个参加现场赛的出线名额，另外还在长春赛区申请了1个现场赛名额。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">2013.11.17</h3>
+                <p>第38届ACM国际大学生程序设计竞赛亚洲区域赛长沙站的比赛在湖南大学举行，我校代表队CodeBreak队（由周开锋、张智强、李志超3名同学组成）荣获银奖。在192支参赛队伍中排名第42位，在105所高等学校中的学校排名第26位。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis"></i>
+            <div class="layui-timeline-content layui-text">
+                <h2 class="layui-timeline-title">ACM集训队期待你再续辉煌...</h2>
+            </div>
+        </li>
+    </ul>
+</div>
+{% endblock %}

@@ -6,38 +6,11 @@
     <link rel="stylesheet" href="/static/css/test.css">
 {% endblock %}
 
+{% load like_tags %}
+
 {% block body %}
 <div class="fly-panel fly-column">
-    <div class="layui-container">
-        <ul class="layui-clear">
-            <li class="layui-hide-xs layui-this"><a href="/">首页</a></li>
-            <li><a href={% url "classify_type" classify.pk %}>提问</a></li>
-            <li><a href="jie/index.html">分享</a></li>
-{#            <span class="layui-badge-dot"></span> {红点提示作用} #}
-            <li><a href="jie/index.html">讨论</a></li>
-            <li><a href="jie/index.html">建议</a></li>
-            <li><a href="jie/index.html">公告</a></li>
-            <li><a href="jie/index.html">动态</a></li>
-            <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span class="fly-mid"></span></li>
-
-            {% if request.user.is_authenticated %}
-            <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href={% url "user_info" %}>我发表的贴</a></li>
-            <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="{% url "user_info" %}#collection">我收藏的贴</a>
-            </li>
-            {% endif %}
-        </ul>
-
-        <div class="fly-column-right ">
-            <span class="fly-search"><i class="layui-icon"></i></span>
-            <a href="jie/add.html" class="layui-btn">发表新帖</a>
-        </div>
-        <div class="layui-hide-sm layui-show-xs-block"
-             style="margin-top: -10px; padding-bottom: 10px; text-align: center;">
-            <a href="jie/add.html" class="layui-btn">发表新帖</a>
-        </div>
-
-
-    </div>
+    {% include 'common/head_2.html' %}
 </div>
 
 <div class="layui-container">
@@ -52,8 +25,8 @@
 
                     {% for article in stick_article %}
                         <li>
-                            <a href="{{ article.author }}" class="fly-avatar">
-                                <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
+                            <a href="{% url 'user_home' article.author.username %}" class="fly-avatar">
+                                <img src="{{ article.author.url }}"
                                      alt="{{ article.author }}">
                             </a>
 
@@ -79,7 +52,7 @@
                         {% endif %}
 
                         <div class="fly-list-info">
-                            <a href={% url "user_home" %} link>
+                            <a href={% url "my_home" %} link>
                                 <cite>{{ article.author }}</cite>
                                 <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
                                 <i class="layui-badge fly-badge-vip">VIP3</i>
@@ -92,9 +65,9 @@
                             <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
                             -->
                             <span class="fly-list-nums">
-                                回复 {{ article.read_num }} &nbsp;&nbsp;|&nbsp;&nbsp;
-                                赞 {{ article.read_num }} &nbsp;&nbsp;|&nbsp;&nbsp;
-                                浏览 {{ article.read_num }}
+                                回复 {{ article.comment_set.all|length }} &nbsp;&nbsp;|&nbsp;&nbsp;
+                                赞 {% get_like_count article %} &nbsp;&nbsp;|&nbsp;
+                                浏览 {{ article.get_read_num }}
                             </span>
                         </div>
                         <div class="fly-list-badge">
@@ -105,7 +78,7 @@
                         </div>
                     </li>
                     {% empty %}
-                        <p>没有置顶内容</p>
+                        <div class="fly-none">没有相关数据</div>
                     {% endfor %}
 
                 </ul>
@@ -129,45 +102,67 @@
 
                     {% for article in articles %}
 
-                    <li>
-                        <a href="user/home.html" class="fly-avatar">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
-                                 alt="贤心">
-                        </a>
-                        <h2>
-                            <a class="layui-badge">分享</a>
-                            <a href={% url "article_detail" article.pk %}>{{ article.title }}</a>
-                        </h2>
-                        <div class="fly-list-info">
-                            <a href="user/home.html" link>
-                                <cite>{{ article.author }}</cite>
+                        <li>
+                            <a href="{% url 'user_home' article.author.username %}" class="fly-avatar">
+                                <img src="{{ article.author.url }}"
+                                     alt="{{ article.author }}">
+                            </a>
+
+                        {% if article.tags.all %}
+
+                            <h2 style="float: left; white-space: nowrap;overflow: inherit;">
                                 <!--
+                                <a class="layui-badge">{{ article.type }}</a>
+                                -->
+                                <a href={% url "article_detail" article.pk %}>{{ article.title }}</a>
+                            </h2>
+                            {% for tag in article.tags.all %}
+                                <a href="" class="tag-label" >{{ tag }}</a>
+                            {% endfor %}
+
+                        {% else %}
+                             <h2>
+                                <!--
+                                <a class="layui-badge">{{ article.type }}</a>
+                                -->
+                                <a href={% url "article_detail" article.pk %}>{{ article.title }}</a>
+                            </h2>
+                        {% endif %}
+
+                        <div class="fly-list-info">
+                            <a href={% url "my_home" %} link>
+                                <cite>{{ article.author }}</cite>
                                 <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
                                 <i class="layui-badge fly-badge-vip">VIP3</i>
-                                -->
                             </a>
-                            <span>刚刚</span>
-
-                            <span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻"><i class="iconfont icon-kiss"></i> 60</span>
-                            <!--<span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>-->
+                            <span>{{ article.create_time|date:"Y-m-d" }} 发表在 &nbsp;[
+                                <a href="">{{ article.type }}</a>
+                                ]
+                            </span>
+                            <!--
+                            <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
+                            -->
                             <span class="fly-list-nums">
-                                <i class="layui-icon">&#xe6c6;</i> {{ article.read_num }}
-                                <i></i>|
-                                <i class="iconfont icon-pinglun1" title="回复"></i> {{ article.read_num }}
+                                回复 {{ article.comment_set.all|length }} &nbsp;&nbsp;|&nbsp;&nbsp;
+                                赞 {% get_like_count article %} &nbsp;&nbsp;|&nbsp;&nbsp;
+                                浏览 {{ article.get_read_num }}
                             </span>
                         </div>
                         <div class="fly-list-badge">
-                            <!--<span class="layui-badge layui-bg-red">精帖</span>-->
+                            <!--
+                            <span class="layui-badge layui-bg-black">置顶</span>
+                            <span class="layui-badge layui-bg-red">精帖</span>
+                            -->
                         </div>
                     </li>
-
                     {% empty %}
+                        <div class="fly-none">没有相关数据</div>
                     {% endfor %}
 
                 </ul>
                 <div style="text-align: center">
                     <div class="laypage-main">
-                        <a href="{% url "classify_type" 1 %}" class="laypage-next">更多帖子</a>
+                        <a href="{% url "classify_type" 0 %}" class="laypage-next">更多帖子</a>
                     </div>
                 </div>
 
@@ -190,21 +185,7 @@
                 </ul>
             </div>
 
-
-            <dl class="fly-panel fly-list-one">
-                <dt class="fly-panel-title">近期热帖</dt>
-
-                {% for article in hot_articles %}
-                    <dd>
-                        <a href={% url "article_detail" article.pk %}>{{ article.title }}</a>
-                        <span><i class="iconfont icon-pinglun1"></i> {{ article.read_num }}</span>
-                    </dd>
-                {% empty %}
-                    <div class="fly-none">没有相关数据</div>
-                {% endfor %}
-
-            </dl>
-
+            {% include 'common/hot_article.html' %}
 
             <div class="fly-panel fly-rank fly-rank-reply" id="LAY_replyRank">
                 <h3 class="fly-panel-title">回贴周榜</h3>
@@ -214,16 +195,7 @@
                             <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" >
                         </a>
                     </dd>
-                    <dd>
-                        <a href="user/home.html">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" ><cite>贤心</cite><i>106次回答</i>
-                        </a>
-                    </dd>
-                    <dd>
-                        <a href="user/home.html">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" ><cite>贤心</cite><i>106次回答</i>
-                        </a>
-                    </dd>
+
                     <dd>
                         <a href="user/home.html">
                             <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"><cite>贤心</cite><i>106次回答</i>

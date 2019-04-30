@@ -2,6 +2,8 @@
 
 {% block title %} ACM社区 {% endblock %}
 
+{% load like_tags %}
+
 {% block article_body %}
 
 
@@ -11,63 +13,67 @@
                 <div class="fly-panel" style="margin-bottom: 0;">
 
                     <div class="fly-panel-title fly-filter">
-                        <a href="" class="layui-this">综合</a>
+                        <a href="" class="layui-this">最新回复</a>
                         <span class="fly-mid"></span>
-                        <a href="">未结</a>
+                        <a href="">最近发表</a>
                         <span class="fly-mid"></span>
-                        <a href="">已结</a>
+                        <a href="">最热</a>
                         <span class="fly-mid"></span>
                         <a href="">精华</a>
-                        <span class="fly-filter-right layui-hide-xs">
-                        <a href="" class="layui-this">按最新</a>
-                        <span class="fly-mid"></span>
-                        <a href="">按热议</a>
-                        </span>
+                        <span class="fly-filter-right layui-hide-xs"> <a href="" class="layui-this">按最新</a>
+                        <span class="fly-mid"></span><a href="">按热议</a></span>
                     </div>
 
                     <ul class="fly-list">
-
                         {% for article in articles %}
-
                         <li>
-                            <a href="user/home.html" class="fly-avatar">
-                                <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
+                            <a href="{% url 'user_home' article.author.username %}" class="fly-avatar">
+                                <img src="{{ article.author.url }}"
                                      alt="{{ article.author }}">
                             </a>
-                            <h2>
-                                <a class="layui-badge">{{ article.type }}</a>
-                                <a href={% url "article_detail" article.pk %}>{{ article.title }}</a>
-                            </h2>
-
-                            <div class="fly-list-info">
-                                <a href={% url 'user_info' %} link>
-                                    <cite>{{ article.author }}</cite>
+                            {% if article.tags.all %}
+                                <h2 style="float: left; white-space: nowrap;overflow: inherit;">
                                     <!--
+                                    <a class="layui-badge">{{ article.type }}</a>
+                                    -->
+                                    <a href={% url "article_detail" article.pk %}>{{ article.title }}</a>
+                                </h2>
+                                {% for tag in article.tags.all %}
+                                    <a href="" class="tag-label" >{{ tag }}</a>
+                                {% endfor %}
+                            {% else %}
+                                 <h2>
+                                    <!--
+                                    <a class="layui-badge">{{ article.type }}</a>
+                                    -->
+                                    <a href={% url "article_detail" article.pk %}>{{ article.title }}</a>
+                                </h2>
+                            {% endif %}
+                            <div class="fly-list-badge">
+                                {% if article.is_stick %}
+                                    <span class="layui-badge layui-bg-black">置顶</span>
+                                {% endif %}
+                            </div>
+                            <div class="fly-list-info">
+                                <a href={% url "my_home" %} link>
+                                    <cite>{{ article.author }}</cite>
                                     <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
                                     <i class="layui-badge fly-badge-vip">VIP3</i>
-                                    -->
                                 </a>
-                                <span>刚刚</span>
-
-                                <!--<span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>-->
+                                <span>{{ article.create_time|date:"Y-m-d" }} 发表在 &nbsp;[
+                                    <a href="">{{ article.type }}</a>
+                                    ]
+                                </span>
                                 <span class="fly-list-nums">
-                                    <i class="layui-icon">&#xe6c6;</i> {{ article.read_num }}
-                                    <i></i>|
-                                    <i class="iconfont icon-pinglun1" title="回复"></i> {{ article.read_num }}
+                                    回复 {{ article.comment_set.all|length }} &nbsp;&nbsp;|&nbsp;&nbsp;
+                                    赞 {% get_like_count article %} &nbsp;&nbsp;|&nbsp;&nbsp;
+                                    浏览 {{ article.read_num }}
                                 </span>
                             </div>
-                            {% if article.is_stick %}
-                                <div class="fly-list-badge">
-                                    <span class="layui-badge layui-bg-black">置顶</span>
-                                    <!--<span class="layui-badge layui-bg-red">精帖</span>-->
-                                </div>
-                            {% endif %}
                         </li>
-
                         {% empty %}
                             <p>没有更多内容了</p>
                         {% endfor %}
-
                     </ul>
 
 
@@ -96,54 +102,7 @@
                 </div>
             </div>
             <div class="layui-col-md3">
-                <dl class="fly-panel fly-list-one">
-                    <dt class="fly-panel-title">本周热议</dt>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-
-                    <!-- 无数据时 -->
-                    <!--
-                    <div class="fly-none">没有相关数据</div>
-                    -->
-                </dl>
+                {% include 'common/hot_article.html' %}
 
 
                 <div class="fly-panel fly-link">

@@ -5,7 +5,7 @@
     <div class="layui-container fly-marginTop fly-user-main">
         <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
             <li class="layui-nav-item">
-                <a href={% url "user_home" %}>
+                <a href={% url "my_home" %}>
                     <i class="layui-icon">&#xe609;</i>
                     我的主页
                 </a>
@@ -43,28 +43,29 @@
 
         <div class="fly-panel fly-panel-user" pad20>
             <div class="layui-tab layui-tab-brief" lay-filter="user" id="LAY_msg" style="margin-top: 15px;">
-                <button class="layui-btn layui-btn-danger" id="LAY_delallmsg">清空全部消息</button>
                 <div id="LAY_minemsg" style="margin-top: 10px;">
-                    <!--<div class="fly-none">您暂时没有最新消息</div>-->
+
+                    {% if not request.user.notifications.all %}
+                        <div class="fly-none">您暂时没有最新消息</div>
+                    {% else %}
+                        <a class="layui-btn layui-btn-danger" href="{% url 'delete_all_notification' %}">清空全部消息</a>
+                    {% endif %}
                     <ul class="mine-msg">
-                        <li data-id="123">
-                            <blockquote class="layui-elem-quote">
-                                <a href="/jump?username=Absolutely" target="_blank"><cite>Absolutely</cite></a>回答了您的求解<a
-                                    target="_blank"
-                                    href="/jie/8153.html/page/0/#item-1489505778669"><cite>layui后台框架</cite></a>
-                            </blockquote>
-                            <p><span>1小时前</span><a href="javascript:;"
-                                                   class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a>
-                            </p>
-                        </li>
-                        <li data-id="123">
-                            <blockquote class="layui-elem-quote">
-                                系统消息：欢迎使用 layui
-                            </blockquote>
-                            <p><span>1小时前</span><a href="javascript:;"
-                                                   class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a>
-                            </p>
-                        </li>
+                        {% for notification in request.user.notifications.all %}
+                            <li>
+                                <blockquote class="layui-elem-quote">
+                                    <a href="{{ notification.data.author_url }}" target="_blank"><cite>{{ notification.data.author_ }}</cite></a>评论了您的帖子
+                                    <a target="_blank" href="{{ notification.data.article_url }}">
+                                        <cite>{{ notification.data.title_ }}</cite>
+                                    </a>
+                                    : {{ notification.verb }}
+                                </blockquote>
+                                <p>
+                                    <span>{{ notification.timesince }}前</span>
+                                    <a href="javascript:;" class="layui-btn layui-btn-small layui-btn-danger">删除</a>
+                                </p>
+                            </li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
@@ -72,4 +73,18 @@
 
     </div>
 
+{% endblock %}
+
+{% block add_script %}
+    <script>
+        window.onload = function () {
+            var url = window.location.href;
+            console.log(url);
+            console.log(url.indexOf('all_notifications'));
+            if(url.indexOf("all_notifications") == -1) {
+                window.location.href = "{% url 'notifications:mark_all_as_read' %}?next={% url 'all_notifications' %}"
+                console.log('全部标记已读');
+            }
+        }
+    </script>
 {% endblock %}

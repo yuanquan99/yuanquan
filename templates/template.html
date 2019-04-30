@@ -5,15 +5,21 @@
     <title>{% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     {% block add_head %} {% endblock %}
+    {% load static %}
+    {% load notifications_tags %}
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'notifications/notify.js' %}"></script>
     <link rel="stylesheet" href="/static/layui/css/layui.css">
     <link rel="stylesheet" href="/static/css/global.css">
+    <link rel="stylesheet" href="/static/css/test.css">
 </head>
 <body>
+
 
 <div class="fly-header layui-bg-black">
     <div class="layui-container">
         <a class="fly-logo" href="/">
-            <img src="/static/images/logo.png" alt="layui">
+            <img src="/static/images/title.png" alt="ACM">
         </a>
         <ul class="layui-nav fly-nav layui-hide-xs">
             <li class="layui-nav-item layui-this">
@@ -24,28 +30,62 @@
             </li>
             <li class="layui-nav-item">
                 <a href="https://github.com/yuanquan99/yuanquan" target="_blank"><i
-                        class="layui-icon layui-icon-fonts-code">&#xe64e</i>项目源码</a>
+                        class="layui-icon layui-icon-fonts-code"></i>项目源码</a>
             </li>
         </ul>
         <ul class="layui-nav fly-nav-user">
             {% if request.user.is_authenticated %}
+                <li style="margin-top: 20px">
+                    <span style="color: #fff">
+                        <span class="fly-search">
+                            <i class="layui-icon"></i>
+                            <span style="margin-left: 3px">搜索 &nbsp;</span>
+                        </span>
+                    </span> |
+                </li>
+                <li style="margin-top: 20px">
+
+                    <a href="{% url 'message' %}" style="color: #fff">
+                        <span class="fly-message">
+                            <i class="layui-icon">&#xe63a;</i>
+                            <span style="margin-left: 3px">消息</span>
+                            {% notifications_unread as unread_count %}
+                            {% if unread_count %}
+                                <span class="layui-badge layui-bg-green live_notify_badge">{% notifications_unread %}</span>
+                            {% endif %}
+                        </span>
+                    </a> |
+                </li>
                 <li class="layui-nav-item">
-                    <a class="fly-nav-avatar" href={% url "user_home" %}>
-                        <cite class="layui-hide-xs">{{ user }}</cite>
-                        <i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：layui 作者"></i>
-                        <i class="layui-badge fly-badge-vip layui-hide-xs">VIP3</i>
-                        <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">
-                    </a>
+                    <span class="fly-nav-avatar" href={% url "my_home" %}>
+                        <!-- <cite class="layui-hide-xs">{{ user.username }}</cite>
+                        <i class="iconfont icon-renzheng layui-hide-xs" title=""></i>
+                        <i class="layui-badge fly-badge-vip layui-hide-xs">VIP3</i> -->
+                        <img src="{{ request.user.url }}" id="user-img-nav">
+                    </span>
                     <dl class="layui-nav-child">
-                        <dd><a href="{% url 'settings' %}"><i class="layui-icon">&#xe620;</i>基本设置</a></dd>
-                        <dd><a href={% url 'message' %}><i class="iconfont icon-tongzhi" style="top: 4px;"></i>我的消息</a>
+                        <dd>
+                            <a href="{% url 'settings' %}"><i class="layui-icon">&#xe620;</i>基本设置</a>
                         </dd>
-                        <dd><a href={% url 'user_home' %}><i class="layui-icon"
-                                                             style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a>
+                        <dd>
+                            <a href={% url 'user_info' %}>
+                                <i class="layui-icon layui-icon-user" style="margin-left: 2px; font-size: 22px"></i>个人中心
+                            </a>
                         </dd>
+                        <dd>
+                            <a href={% url 'my_home' %}>
+                                <i class="layui-icon" style="margin-left: 2px; font-size: 22px">&#xe68e;</i>我的主页
+                            </a>
+                        </dd>
+                        {% if request.user.is_superuser %}
+                            <dd>
+                                <a href="/admin"><i class="layui-icon" style="margin-left: 2px; font-size: 22px">&#xe674;</i>后台管理</a>
+                            </dd>
+                        {% endif %}
+
                         <hr style="margin: 5px 0;">
                         <dd>
-                            <a href={% url 'logout' %} style="text-align: center;">退出登录</a>
+                            <a href={% url 'logout' %} style="text-align: center">退出登录</a>
                         </dd>
                     </dl>
                 </li>
@@ -82,7 +122,17 @@
     }).extend({
         fly: 'index'
     }).use('fly');
+    // 实时获取未读消息数量
+    function fill_notification_read_num(data) {
+        unread_count = data['unread_count'];
+        if (unread_count != 0) {
+            $('.live_notify_badge').text(unread_count);
+        }
+    }
+
 </script>
 
+{% register_notify_callbacks callbacks='fill_notification_read_num' %}
+{% block add_script %}{% endblock %}
 </body>
 </html>

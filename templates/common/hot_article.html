@@ -1,10 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<dl class="fly-panel fly-list-one">
+    <dt class="fly-panel-title">近期热帖</dt>
 
-</body>
-</html>
+    {% for art in hot_articles %}
+         <dd>
+             <h2>
+                <a href={% url "article_detail" art.pk %}>{{ art.title }}</a>
+             </h2>
+
+             <div class="fly-list-info">
+                <span>发表于 {{ art.create_time }}</span>
+                <span class="fly-list-nums">
+                    回复({{ art.comment_set.all|length }})
+                </span>
+             </div>
+        </dd>
+    {% empty %}
+        <div class="fly-none">没有相关数据</div>
+    {% endfor %}
+
+</dl>

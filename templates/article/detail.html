@@ -2,6 +2,22 @@
 
 {% block title %} 帖子详情页 {% endblock %}
 
+{% load like_tags %}
+{% load collection %}
+
+{% block add_head %}
+
+    <link rel="stylesheet" href="/static/css/test.css">
+    <script type="text/javascript">
+        function f() {
+            var className = document.getElementsByClassName("post-floor");
+            for (var i = 0; i < className.length; i++) {
+                className[i].innerHTML = (i + 1) + '#';
+            }
+        }
+    </script>
+{% endblock %}
+
 {% block article_body %}
 
     <div class="layui-container">
@@ -9,149 +25,136 @@
             <div class="layui-col-md9 content detail">
                 <div class="fly-panel detail-box">
                     <h1>
-                        {{ article.title }}
-                        &nbsp;&nbsp;
+                        {{ article.title }} &nbsp;
                         <span class="layui-badge layui-bg-black">置顶</span>
                         <span class="layui-badge layui-bg-red">精帖</span>
                         <span class="layui-badge layui-bg-green fly-detail-column">动态</span>
                     </h1>
 
                     <div class="detail-about" style="margin-top: 15px">
-                        <a class="fly-avatar" href={% url "user_home" %}>
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
+                        <a class="fly-avatar" href={% url "my_home" %}>
+                            <img src="{{ article.author.url }}"
                                  alt={{ article.author }}>
                         </a>
                         <div class="fly-detail-user">
                             <a href={% url "user_info" %} class="fly-link">
                                 <cite>{{ article.author }}</cite>
-                                <i class="iconfont icon-renzheng" title="认证信息：{{ rows.user.approve }}"></i>
+                                <i class="iconfont icon-renzheng"></i>
                                 <i class="layui-badge fly-badge-vip">VIP3</i>
                             </a>
                         </div>
                         <div>
-                            <span>编辑于 2017-11-30</span>
+                            <span>发表于 {{ article.create_time }}</span>
                         </div>
                     </div>
 
-                    <div class="detail-body photos">
-                        <pre>{{ article.content }}</pre>
+                    <div class="detail-body photos" style="margin-bottom: 45px">
+                        {{ article.content|safe }}
+                        <div class=" fly-column-right" style="margin-right: 35px; margin-top:15px; top: auto;
+                                font: 15px/1.5 arial,STHeiti,'Microsoft YaHei',\5b8b\4f53;">
+
+                            <a href="javascript:void(0);" style="margin: 0 10px" title="{% get_collect_title article request.user %}"
+                                                            onclick="collect_change(this, {{ article.pk }})">
+                                <span class="collect_article {% get_collect_class article request.user %}">
+                                    收藏(<span class="coll_num">{% get_coll_num article %}</span>)
+                                </span>
+                            </a> |
+                            <a href="javascript:void(0);" style="margin: 0 10px"
+                                         onclick="likeChange(this, '{% get_content_type article %}', {{ article.pk }}, 'article_like')">
+                                <span class="article_like {% get_like_status article %}" >
+                                    赞(<span class="like_num">{% get_like_count article %}</span>)
+                                </span>
+                            </a> |
+                            <a href="" style="margin: 0 10px">回帖</a> |
+                            <a href="" style="margin: 0 10px">举报</a>
+                        </div>
                     </div>
+
                 </div>
 
                 <div class="fly-panel detail-box">
 
-{#                    <div class="fly-panel detail-box" id="flyReply">#}
-{#                    <fieldset class="layui-elem-field layui-field-title" style="text-align: center;">#}
-{#                        <legend>回帖</legend>#}
-{#                    </fieldset>#}
-
                     <div>
-                        <h2>1条回帖</h2>
+                        <h2>{{ comments|length }}条回帖</h2>
                         <hr>
 
                     </div>
-                    <ul class="jieda" id="jieda">
-                        <li data-id="111" class="jieda-daan">
-                            <a name="item-1111111111"></a>
-                            <div class="detail-about detail-about-reply">
-                                <a class="fly-avatar" href="">
-                                    <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
-                                         alt=" ">
-                                </a>
-                                <div class="fly-detail-user">
-                                    <a href="" class="fly-link">
-                                        <cite>贤心</cite>
-                                        <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
-                                        <i class="layui-badge fly-badge-vip">VIP3</i>
+                    <ul class="jieda" id="comment-list">
+
+                        {% for comment in comments %}
+                            <li>
+                                <div class="detail-about detail-about-reply" id="comment_{{ comment.pk }}">
+                                    <a class="fly-avatar" href="">
+                                        <img src="{{ comment.author.url }}"
+                                             alt=" ">
                                     </a>
+                                    <div class="fly-detail-user">
+                                        <a href="" class="fly-link">
+                                            {{ comment.author.username }}
+                                            <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
+                                            <i class="layui-badge fly-badge-vip">VIP3</i>
+                                        </a>
 
-                                    <span>(楼主)</span>
-                                    <!--
-                                    <span style="color:#5FB878">(管理员)</span>
-                                    <span style="color:#FF9E3F">（社区之光）</span>
-                                    <span style="color:#999">（该号已被封）</span>
-                                    -->
-                                </div>
+                                        {% if article.author == comment.author %}
+                                            <span>(楼主)</span>
+                                        {% endif %}
 
-                                <div class="detail-hits">
-                                    <span>2017-11-30</span>
-                                </div>
+                                        {% if comment.author.is_superuser %}
+                                            <span style="color:#5FB878; margin-left: 5px">(管理员)</span>
+                                        {% endif %}
 
-                                <i class="iconfont icon-caina" title="最佳答案"></i>
-                            </div>
-                            <div class="detail-body jieda-body photos">
-                                <p>香菇那个蓝瘦，这是一条被采纳的回帖</p>
-                            </div>
-                            <div class="jieda-reply">
-                              <span class="jieda-zan zanok" type="zan">
-                                <i class="iconfont icon-zan"></i>
-                                <em>66</em>
-                              </span>
-                                <span type="reply">
-                                <i class="iconfont icon-svgmoban53"></i>
-                                回复
-                                </span>
-                                <div class="jieda-admin">
-                                    <span type="edit">编辑</span>
-                                    <span type="del">删除</span>
-                                    <!-- <span class="jieda-accept" type="accept">采纳</span> -->
-                                </div>
-                            </div>
-                        </li>
+                                        <!--
+                                        <span style="color:#FF9E3F">（社区之光）</span>
+                                        <span style="color:#999">（该号已被封）</span>
+                                        -->
+                                        <span class="post-floor">1#</span>
+                                    </div>
 
-                        <li data-id="111">
-                            <a name="item-1111111111"></a>
-                            <div class="detail-about detail-about-reply">
-                                <a class="fly-avatar" href="">
-                                    <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
-                                         alt=" ">
-                                </a>
-                                <div class="fly-detail-user">
-                                    <a href="" class="fly-link">
-                                        <cite>贤心</cite>
-                                    </a>
-                                </div>
-                                <div class="detail-hits">
-                                    <span>2017-11-30</span>
-                                </div>
-                            </div>
-                            <div class="detail-body jieda-body photos">
-                                <p>蓝瘦那个香菇，这是一条没被采纳的回帖</p>
-                            </div>
-                            <div class="jieda-reply">
-              <span class="jieda-zan" type="zan">
-                <i class="iconfont icon-zan"></i>
-                <em>0</em>
-              </span>
-                                <span type="reply">
-                <i class="iconfont icon-svgmoban53"></i>
-                回复
-              </span>
-                                <div class="jieda-admin">
-                                    <span type="edit">编辑</span>
-                                    <span type="del">删除</span>
-                                    <span class="jieda-accept" type="accept">采纳</span>
-                                </div>
-                            </div>
-                        </li>
+                                    <div class="detail-body jieda-body photos" style="margin: 10px 0">
+                                        <h3>{{ comment.content|safe }}</h3>
+                                    </div>
 
-                        <!-- 无数据时 -->
-                        <!-- <li class="fly-none">消灭零回复</li> -->
+                                    <div>
+                                        <span class="detail-hits"> 回复于{{ comment.create_time }}</span>
+
+                                        <div class="jieda-reply " style="float: right; font-size: 14px;"
+                                             onclick="likeChange(this, '{% get_content_type comment %}', {{ comment.pk }}, 'jieda-zan')">
+                                            <span class="jieda-zan {% get_like_status comment %}" type="zan">
+                                                <i class="layui-icon">&#xe6c6;</i>
+                                                <em style="margin-bottom: 5px"
+                                                    class="like_num">{% get_like_count comment %}</em>
+                                            </span>
+
+                                            <i class="layui-icon">&#xe611;</i>
+                                            <span>回复</span>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% empty %}
+                            <li class="fly-none" id="detail-comment-none">消灭零回复</li>
+                        {% endfor %}
+                        <!-- 添加楼层 -->
+                        <script>
+                            f();
+                        </script>
+
                     </ul>
 
                     <div class="layui-form layui-form-pane">
-                        <form action="/jie/reply/" method="post">
+                        <form id="detail-comment-form" action="" method="post">
+                            {% csrf_token %}
                             <div class="layui-form-item layui-form-text">
-                                <a name="comment"></a>
                                 <div class="layui-input-block">
-                                    <textarea id="L_content" name="content" required lay-verify="required"
+                                    <textarea id="detail-comment" name="detail-comment" required lay-verify="required"
                                               placeholder="请输入内容" class="layui-textarea fly-editor"
                                               style="height: 150px;"></textarea>
                                 </div>
                             </div>
                             <div class="layui-form-item">
                                 <input type="hidden" name="jid" value="123">
-                                <button class="layui-btn" lay-filter="*" lay-submit>提交回复</button>
+                                <button id="detail-comment-submit" type="submit" class="layui-btn">提交回复</button>
                             </div>
                         </form>
                     </div>
@@ -161,79 +164,10 @@
 
                 <dl class="fly-panel fly-list-one">
                     <dt class="fly-panel-title" style="font-size: 18px">类似帖子</dt>
-
-
                     <div class="fly-none">没有相关数据</div>
                 </dl>
 
-                <dl class="fly-panel fly-list-one">
-                    <dt class="fly-panel-title" style="font-size: 18px">最近热帖</dt>
-                    <dd>
-                        <h2>
-                            <a href={% url "article_detail" article.pk %}>{{ article.title }}</a>
-                        </h2>
-
-                        <div class="fly-list-info">
-
-                            <span>发表于 今天 14:14:07</span>
-
-                            <!--<span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>-->
-                            <span class="fly-list-nums">
-                    回复(0)
-                </span>
-                        </div>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <div class="fly-list-info">
-
-                            <span>发表于 今天 14:14:07</span>
-
-                            <!--<span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>-->
-                            <span class="fly-list-nums">
-                    回复(0)
-                </span>
-                        </div>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-                    <dd>
-                        <a href="">基于 layui 的极简社区页面模版</a>
-                        <span><i class="iconfont icon-pinglun1"></i> 16</span>
-                    </dd>
-
-                    <!-- 无数据时 -->
-                    <!--
-                    <div class="fly-none">没有相关数据</div>
-                    -->
-                </dl>
-
+                {% include 'common/hot_article.html' %}
 
             </div>
         </div>
@@ -242,4 +176,165 @@
 
 {% endblock %}
 
+{% block add_script %}
 
+    <script type="text/javascript">
+        function numFormat(num) {
+            return ('00' + num).substr(-2);
+        }
+
+        function timeFormat(timestamp) {
+            var datetime = new Date(timestamp * 1000);
+            var year = datetime.getFullYear();
+            var month = numFormat(datetime.getMonth() + 1);
+            var day = numFormat(datetime.getDate());
+            var hour = numFormat(datetime.getHours());
+            var minute = numFormat(datetime.getMinutes());
+            return year + '年' + month + '月' + day + '日 ' + hour + ':' + minute;
+        }
+
+        $('#detail-comment-form').submit(function () {
+            if ('{{ request.user }}' == 'AnonymousUser') {
+                layer.msg('请登录后评论');
+                return false;
+            }
+            $.ajax({
+                url: '{% url 'add_comment' article.pk %}',
+                type: 'POST',
+                data: $(this).serialize(),
+                cache: false,
+                success: function (data) {
+                    console.log(data);
+                    if (data.status == 'SUCCESS') {
+                        var add_comment = '<li>' +
+                            '<div class="detail-about detail-about-reply">\n' +
+                            '    <a class="fly-avatar" href="">\n' +
+                            '        <img src="' + '{{ request.user.url }}' + '"\n' +
+                            '             alt="">\n' +
+                            '    </a>\n' +
+                            '    <div class="fly-detail-user">\n' +
+                            '        <a href="" class="fly-link">\n' + data.user +
+                            '            <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>\n' +
+                            '            <i class="layui-badge fly-badge-vip">VIP3</i>\n' +
+                            '        </a>\n' +
+                            '\n';
+                        if (data.is_louzhu) add_comment += '<span>(楼主)</span>';
+                        if (data.is_superuser) add_comment += '<span style="color:#5FB878; margin-left: 5px">(管理员)</span>';
+                        add_comment +=
+                            '        <span class="post-floor">1#</span>\n' +
+                            '    </div>\n' +
+                            '    <div class="detail-body jieda-body photos" style="margin: 10px 0">\n' +
+                            '        <h3>' + data.comment_content + '</h3>\n' +
+                            '    </div>\n' +
+                            '    <div>\n' +
+                            '        <span class="detail-hits" > 回复于' + timeFormat(data.comment_time) + '</span>\n' +
+                            '        <div class="jieda-reply " style="float: right; font-size: 14px;">\n' +
+                            '            <span class="jieda-zan " type="zan">\n' +
+                            '                <i class="layui-icon" >&#xe6c6;</i>\n' +
+                            '                <em style="margin-bottom: 5px">0</em>\n' +
+                            '            </span>\n' +
+                            '            <i class="layui-icon">&#xe611;</i>\n' +
+                            '            <span>回复</span>\n' +
+                            '        </div>\n' +
+                            '    </div>\n' +
+                            '</div>' +
+                            '</li>';
+
+                        $("#comment-list").prepend(add_comment);
+                        $("#detail-comment").val('');
+                        $("#detail-comment-none").remove();
+                        layer.msg('评论成功');
+                        f();
+                    } else {
+                        var error_message = data['error'];
+                        layer.msg(error_message);
+                    }
+                },
+                error: function (xhr) {
+                    console.log(xhr);
+                }
+            });
+            return false;
+        });
+
+        function likeChange(obj, content_type, object_id, class_name) {
+            var is_like = obj.getElementsByClassName('active').length == 0
+            $.ajax({
+                url: "{% url 'like_change' %}",
+                type: 'GET',
+                data: {
+                    content_type: content_type,
+                    object_id: object_id,
+                    is_like: is_like
+                },
+                cache: false,
+                success: function (data) {
+                    if (data['status'] == 'SUCCESS') {
+                        // 更新点赞状态
+                        var element = $(obj.getElementsByClassName(class_name));
+                        console.log(element);
+                        console.log(class_name);
+                        if (is_like) {
+                            element.addClass('active');
+                        } else {
+                            element.removeClass('active');
+                        }
+                        // 更新点赞数量
+                        var liked_num = $(obj.getElementsByClassName('like_num'));
+                        liked_num.text(data['like_num']);
+                    } else {
+                        console.log(data['message']);
+                    }
+                },
+                error: function (xhr) {
+                    console.log(xhr);
+                }
+            });
+            return false;
+        }
+
+        function collect_change(obj, article_id) {
+            var is_like = obj.getElementsByClassName('active').length == 0
+            console.log(is_like)
+            $.ajax({
+                url: "{% url 'collect_change' %}",
+                type: 'POST',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    article_id: article_id,
+                    is_like: is_like
+                },
+                cache: false,
+                success: function (data) {
+                    console.log(data)
+                    if (data['status'] == 'SUCCESS') {
+                        // 更新点赞状态
+                        var element = $(obj.getElementsByClassName('collect_article'));
+                        console.log(element);
+                        if (is_like) {
+                            element.addClass('active');
+                        } else {
+                            element.removeClass('active');
+                        }
+                        // 更新收藏数量
+                        var coll_num = $(obj.getElementsByClassName('coll_num'));
+                        console.log(coll_num);
+                        coll_num.text(data['collect_num']);
+                    } else {
+                        console.log(data['message']);
+                    }
+                },
+                error: function (xhr) {
+                    console.log(xhr);
+                }
+            });
+            return false;
+        }
+
+        if (window.location.hash) {
+            $('html').animate({
+                scrollTop: $(window.location.hash).offset().top-60
+            }, 500);
+        }
+    </script>
+{% endblock %}
