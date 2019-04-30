@@ -1,17 +1,23 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from article.models import Article, ArticleType
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import JsonResponse
+from django.conf import settings
+from read_count.utils import get_hot_article
 
 
 def home(request):
     stick_article = Article.objects.filter(is_stick=True)
-    articles = Article.objects.filter(is_stick=False)[:12]
-    classify = ArticleType.objects.all()[0]
+    articles = Article.objects.filter(is_stick=False, display=True)[:12]
+    hot_articles = get_hot_article()
+    types = ArticleType.objects.filter(display=True)
     context = {
         'stick_article': stick_article,
         'articles': articles,
-        'classify': classify,
+        'types': types,
+        'hot_articles': hot_articles,
     }
     return render(request, 'index.html', context=context)
 
@@ -34,13 +40,51 @@ def search(request):
 
     if len(key_word) == 1:
         key_word = key_word[0]
+    hot_articles = get_hot_article()
+    types = ArticleType.objects.filter(display=True)
     context = {
         "key_word": key_word,
         "article_num": len(articles),
-        "articles": articles
+        "articles": articles,
+        'hot_articles': hot_articles,
+        'types': types,
     }
     return render(request, "search.html", context=context)
 
 
 def test(request):
     return render(request, 'test.html')
+
+
+def info(request):
+    return render(request, 'hnust_acm.html')
+
+
+def record(request):
+    return render(request, 'record.html')
+
+
+def load_file(request):
+    print(request.POST.get('result', ''))
+    print(request.POST)
+    f1 = request.FILES['picture']
+    pic_path = settings.MEDIA_ROOT + request.user.username + '_' + f1.name
+    print(pic_path)
+    user = request.user
+    user.url = '/static/user_pic/' + request.user.username + '_' + f1.name
+    user.save()
+    print(request.user.url)
+    with open(pic_path, 'wb') as pic:
+        for c in f1.chunks():
+            pic.write(c)
+
+    data = {
+        'url': '/static/user_pic/' + request.user.username + '_' + f1.name,
+    }
+    return JsonResponse(data)
+
+
+def delete_all_notification(request):
+    notifications = request.user.notifications.read()
+    notifications.delete()
+    return redirect(reverse('all_notifications'))

@@ -16,7 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import home
-import user, article
+import user, article, comment
+from comment.views import add_comment
+from django.conf import settings
+from django.conf.urls.static import static
+import notifications.urls
 
 
 urlpatterns = [
@@ -24,10 +28,18 @@ urlpatterns = [
     path('', home.home, name='home'),
     path('article/', include('article.urls')),
     path('user/', include('user.urls')),
+    path('like/', include('comment.urls')),
     path('login/', user.views.login, name='login'),
     path('logout/', user.views.logout, name='logout'),
     path('register/', user.views.register, name='register'),
     path('search/', home.search, name='search'),
     path('test/', home.test, name='test'),
     path('classify/<int:classify_id>', article.views.article_type, name='classify_type'),
-]
+    path('add_comment/<int:article_id>', add_comment, name='add_comment'),
+    path('info/', home.info, name='info'),
+    path('record/', home.record, name='record'),
+    path('load_file/', home.load_file, name='load_file'),
+    path('notifications/', include(notifications.urls, namespace='notifications')),
+    path('delete_all_notification', home.delete_all_notification, name='delete_all_notification'),
+] + static('/pic', document_root=settings.MEDIA_ROOT)
+

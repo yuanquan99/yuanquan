@@ -1,6 +1,4 @@
 from django.contrib import admin
-
-# Register your models here.
 from .models import Article
 from .models import ArticleType, ArticleTag
 
@@ -11,14 +9,13 @@ class ArticleAdmin(admin.ModelAdmin):
         'id',
         'title',
         'author',
-        'content',
         'read_num',
         'type',
         'create_time',
-        'update_time',
+        'last_comment_time',
         'is_stick',
-        'is_deleted',
-
+        'display',
+        'get_read_num'
     ]
     ordering = ['id'] # 倒序‘-id’
 
@@ -28,12 +25,15 @@ class TypeAdmin(admin.ModelAdmin):
     list_display = [
         'id',
         'type_name',
-        'is_delete',
+        'display',
     ]
     ordering = ['id']
 
 
 @admin.register(ArticleTag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = ['id', 'tag_name', 'is_delete']
+    list_display = ['id', 'tag_name', 'display']
     ordering = ['id']
+
+
+admin.site.site_header = "HNUST ACM社区后台管理"

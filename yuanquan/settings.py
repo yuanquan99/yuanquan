@@ -41,8 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'notifications',
     'article',
     'user',
+    'comment',
+    'read_count',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +130,21 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/user_pic/')
+
+# notifications允许添加额外参数
+DJANGO_NOTIFICATIONS_CONFIG = {
+    'USE_JSONFIELD': True
+}
+
+
+# send mail
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = '1334336125@qq.com'
+EMAIL_HOST_PASSWORD = 'dhhsmgjzcnlmhdgf'  # 授权码
+EMAIL_SUBJECT_PREFIX = '[ACM社区] '
+EMAIL_USE_TLS = True  # 与SMTP服务器通信时，是否启动TLS链接(安全链接)

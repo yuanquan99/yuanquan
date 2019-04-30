@@ -142,7 +142,7 @@ pre{padding: 10px 15px; margin: 10px 0; font-size: 12px; border-left: 6px solid 
 .fly-nav a i{position: absolute; left: 25px; top: 0; padding-right: 10px; font-size: 26px;}
 .fly-nav a .icon-shouye, .nav a .icon-shezhi{top: 2px;}
 
-.fly-nav-user{position: absolute; top: 0; right: 0;}
+.fly-nav-user{position: absolute; top: 0; right: 0; display: -webkit-inline-box;}
 .fly-nav-user .iconfont{position: relative;}
 .fly-nav-avatar img{width: 36px; height: 36px; margin-left: 10px; border-radius: 100%;}
 .fly-nav-avatar  .icon-renzheng{font-size: 16px; top: 1px;}
@@ -192,11 +192,16 @@ pre{padding: 10px 15px; margin: 10px 0; font-size: 12px; border-left: 6px solid 
 .fly-column-right .layui-btn{vertical-align: initial;}
 .fly-column .layui-badge-dot{position: absolute; top: 50%; left: 50%; margin: -4px 0 0 20px;}
 
-/* 搜索 */
+/* 搜索
 .fly-search{display: inline-block; vertical-align: top; width: 50px; height: 50px; margin-right: 10px; text-align: center; cursor: pointer; font-size: 20px;}
+
 .fly-search .layui-icon{font-size: 20px;}
+*/
 .fly-search:hover{color: #5FB878;}
 .fly-layer-search input{height: 75px; line-height: 75px; width: 500px; padding: 0 15px; font-size: 20px; border: none 0; background: none;}
+
+/*消息*/
+.fly-message:hover{color: #5FB878;}
 
 /* 筛选 */
 .fly-filter a{padding: 0 8px; color: #666;}
@@ -255,10 +260,10 @@ pre{padding: 10px 15px; margin: 10px 0; font-size: 12px; border-left: 6px solid 
 
 /* 单行列表 */
 .fly-list-one .fly-panel-title{margin-bottom: 5px;}
-.fly-list-one dd{margin: 0 15px; line-height: 26px; white-space: nowrap; overflow: hidden; list-style: decimal-leading-zero inside; *list-style-type: decimal inside; color: #009E94;}
+.fly-list-one dd{margin: 0 15px; line-height: 26px; /*white-space: nowrap; */overflow: hidden; list-style: decimal-leading-zero inside; *list-style-type: decimal inside; color: #009E94;}
 .fly-list-one dd a,
 .fly-list-one dd span{display: inline-block; *display: inline; *zoom: 1; vertical-align: top; font-style: normal}
-.fly-list-one dd a{max-width: 85%; margin-right: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px;}
+.fly-list-one dd a{max-width: 85%; margin-right: 5px; overflow: hidden; text-overflow: ellipsis; /*white-space: nowrap; */font-size: 14px;}
 .fly-list-one dd span{font-size: 12px; color: #ccc;}
 .fly-list-one dd:last-child{padding-bottom: 5px;}
 
@@ -338,9 +343,9 @@ body .layui-edit-face  .layui-layer-content{padding:0; background-color:#fff; co
 .detail-hits .layui-btn{border-radius: 0;}
 .detail-hits .layui-btn+.layui-btn{margin-left: 5px;}
 .detail-hits .jie-admin{margin-right: 1px;}
-.detail-body{margin: 20px 0 0; min-height: 306px; line-height: 26px; font-size: 16px; color: #333; word-wrap: break-word;}
+.detail-body{margin: 20px 0 0; min-height: 50px; line-height: 26px; font-size: 16px; color: #333; word-wrap: break-word;}
 .detail-body p{margin-bottom:15px;}
-.detail-body a{color:#4f99cf;}
+.detail-body a{/*color:#4f99cf;*/}
 .detail-body img{max-width: 100%; cursor: crosshair;}
 .detail-body table{margin: 10px 0 15px;}
 .detail-body table thead{background-color:#f2f2f2;}

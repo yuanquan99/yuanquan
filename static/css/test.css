@@ -39,11 +39,11 @@ layui-table th {
 }
 
 .laytable-cell-4-0-0 {
-    width: 90%;
+    width: 60%;
 }
 
 .laytable-cell-4-0-1 {
-    width: 10%;
+    width: 20%;
 }
 
 .layui-none {
@@ -53,8 +53,6 @@ layui-table th {
     color: #999;
 }
 
-
-
 .tags-input{
   font-size: 14px;
   padding: 0;
@@ -62,4 +60,17 @@ layui-table th {
   border: none;
   color: inherit;
   width: 10em;
+}
+
+.post-floor {
+    padding: 1px 12px;
+    border-radius: 3px;
+    color: #fff;
+    font-size: 14px;
+    background: #dcdadc;
+    float: right;
+}
+
+.active {
+    color: #009688!important;
 }

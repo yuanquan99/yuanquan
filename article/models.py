@@ -1,12 +1,16 @@
 from django.db import models
-from django.utils import timezone
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.conf import settings
+from read_count.models import ReadNum
+from django.db.models import ObjectDoesNotExist
+from django.utils import timezone
 
 
 class ArticleType(models.Model):
     type_name = models.CharField(max_length=30, verbose_name='类型')
-    is_delete = models.BooleanField(default=False, verbose_name='是否显示')
+    display = models.BooleanField(default=True, verbose_name='是否显示')
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
     def __str__(self):
         return self.type_name
@@ -14,7 +18,8 @@ class ArticleType(models.Model):
 
 class ArticleTag(models.Model):
     tag_name = models.CharField(max_length=30, verbose_name='标签')
-    is_delete = models.BooleanField(default=False, verbose_name='是否删除')
+    display = models.BooleanField(default=True, verbose_name='是否显示')
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
     def __str__(self):
         return self.tag_name
@@ -32,25 +37,23 @@ class Article(models.Model):
     comment_num = models.IntegerField(default=0, verbose_name='评论数')
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     update_time = models.DateTimeField(auto_now=True, verbose_name='最近更新')
-    is_deleted = models.BooleanField(default=False, verbose_name='是否删除')
+    last_comment_time = models.DateTimeField(default=timezone.now, verbose_name='最近评论时间')
+    display = models.BooleanField(default=True, verbose_name='是否显示')
     is_stick = models.BooleanField(default=False, verbose_name='是否置顶')
 
     def __str__(self):
         return '%s' % self.title
 
+    def get_read_num(self):
+        try:
+            ct = ContentType.objects.get_for_model(Article)
+            Readnum = ReadNum.objects.get(content_type=ct, object_id=self.pk)
+            return Readnum.read_num
+        except ObjectDoesNotExist:
+            return 0
+
     class Meta:
         ordering = ['-create_time']
+        verbose_name = '帖子'
+        verbose_name_plural = verbose_name
 
-
-# class Comment(models.Model):
-#     content = models.TextField(verbose_name='评论内容')
-#     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, verbose_name='评论者')
-#     create_time = models.DateTimeField(auto_now_add=True, verbose_name='评论时间')
-#     is_delete = models.BooleanField(default=False, blank=False, null=False, verbose_name='是否显示')
-#
-#     class Meta:
-#         ordering = ['-create_time']
-#         verbose_name = '评论'
-#
-#     def __str__(self):
-#         return self.content

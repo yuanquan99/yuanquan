@@ -6,6 +6,7 @@ from django.utils.translation import gettext, gettext_lazy as _
 
 User = get_user_model()
 
+
 @admin.register(User)
 class UserAdmins(UserAdmin):
     fieldsets = (
@@ -15,4 +16,4 @@ class UserAdmins(UserAdmin):
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
 
-    list_display = ('username', 'email', 'phone', 'nickname', 'city', 'is_staff', 'is_active', 'is_superuser')
+    list_display = ('username', 'email', 'phone', 'nickname', 'city', 'url', 'is_staff', 'is_active', 'is_superuser')

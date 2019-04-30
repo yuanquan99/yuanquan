@@ -10,7 +10,7 @@ register = template.Library()
 def get_like_count(obj):
     content_type = ContentType.objects.get_for_model(obj)
     like_count, created = LikeCount.objects.get_or_create(content_type=content_type, object_id=obj.pk)
-    return like_count.liked_num
+    return like_count.like_num
 
 
 @register.simple_tag(takes_context=True)

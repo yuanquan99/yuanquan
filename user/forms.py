@@ -53,7 +53,6 @@ class RegisterFrom(forms.Form):
     password_again = forms.CharField(label='确认密码', min_length=6, max_length=30, widget=forms.PasswordInput(attrs=pwdacss))
 
     def clean_username(self):
-        print('clean_username')
         username = self.cleaned_data['username']
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError('用户名已存在')

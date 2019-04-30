@@ -316,16 +316,7 @@ layui.define(['laypage', 'fly', 'element', 'flow'], function(exports){
       }
     }
     
-    
-    /*
-    fly.json('/message/find/', {}, function(res){
-      var html = laytpl(tpl).render(res);
-      dom.minemsg.html(html);
-      if(res.rows.length > 0){
-        delAll.removeClass('layui-hide');
-      }
-    });
-    */
+
     
     //阅读后删除
     dom.minemsg.on('click', '.mine-msg li .fly-delete', function(){
