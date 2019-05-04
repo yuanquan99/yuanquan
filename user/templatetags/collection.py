@@ -1,4 +1,5 @@
 from django import template
+from django.contrib.auth.decorators import login_required
 register = template.Library()
 
 

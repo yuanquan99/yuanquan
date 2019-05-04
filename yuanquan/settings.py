@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'mdeditor',
+    'ckeditor',
     'notifications',
     'article',
     'user',
@@ -112,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'zh-Hans'
+LANGUAGE_CODE = 'zh-hans'
 
 TIME_ZONE = 'Asia/Shanghai'
 
@@ -132,12 +134,12 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/user_pic/')
+MDEDITOR_PICTURE_URL = '/static/user_pic/'
 
 # notifications允许添加额外参数
 DJANGO_NOTIFICATIONS_CONFIG = {
-    'USE_JSONFIELD': True
+    'USE_JSONFIELD': True,
 }
-
 
 # send mail
 
@@ -148,3 +150,51 @@ EMAIL_HOST_USER = '1334336125@qq.com'
 EMAIL_HOST_PASSWORD = 'dhhsmgjzcnlmhdgf'  # 授权码
 EMAIL_SUBJECT_PREFIX = '[ACM社区] '
 EMAIL_USE_TLS = True  # 与SMTP服务器通信时，是否启动TLS链接(安全链接)
+
+# 配置ckeditor
+CKEDITOR_UPLOAD_PATH = 'upload/'
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'custom',
+        'toolbar_custom': [
+            ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
+            ["TextColor", "BGColor", 'RemoveFormat'],
+            ['NumberedList', 'BulletedList'],
+            ['Link', 'Unlink'],
+            ["Smiley", "SpecialChar", 'Blockquote'],
+        ],
+        'height': '180',
+        'tabSpaces': 4,
+        'removePlugins': 'elementspath',
+        'resize_enabled': False,
+    }
+}
+
+
+# markdown editor
+MDEDITOR_CONFIGS = {
+    'default': {
+        'width': '100% ',
+        'heigth': 300,
+        'toolbar': ["undo", "redo", "|",
+                    "bold", "del", "italic", "quote",  "|",
+                    "h1", "h2", "h3", "h5", "h6", "|",
+                    "list-ul", "list-ol", "|",
+                    "link",  "image", "preformatted-text", "table",
+                    "html-entities", "pagebreak", "|", "help",
+                    "||", "preview", "watch"],  # custom edit box toolbar
+        'upload_image_formats': ["jpg", "jpeg", "gif", "png", "bmp", "webp"],  # image upload format type
+        'image_floder': 'editor',  # image save the folder name
+        'theme': 'default',  # edit box theme, dark / default
+        'preview_theme': 'default',  # Preview area theme, dark / default
+        'editor_theme': 'default',  # edit area theme, pastel-on-dark / default
+        'toolbar_autofixed': False,  # Whether the toolbar capitals
+        'search_replace': True,  # Whether to open the search for replacement
+        'emoji': True,  # whether to open the expression function
+        'tex': True,  # whether to open the tex chart function
+        'flow_chart': True,  # whether to open the flow chart function
+        'sequence': True  # Whether to open the sequence diagram function
+    }
+}
+
+

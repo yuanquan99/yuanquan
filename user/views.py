@@ -63,7 +63,7 @@ def user_home(request, user_name):
     try:
         user = User.objects.get(username=user_name)
     except ObjectDoesNotExist:
-        return HttpResponse('该用户不存在')
+        return render(request, '404.html')
     articles = Article.objects.filter(author=user)
     context = {
         'query_user': user,
@@ -124,4 +124,73 @@ def collect_change(request):
             request.user.collect_articles.remove(article)
         data['collect_num'] = article.user_set.count()
         data['status'] = 'SUCCESS'
+    return JsonResponse(data)
+
+
+def change_user_info(request):
+    data = {
+        'status': 'ERROR',
+        'message': 'ERROR, 请稍后重试',
+    }
+    if request.user is None:
+        data['message'] = '未登录, 请登陆后继续操作'
+        return JsonResponse(data)
+
+    if request.method == 'POST':
+        email = request.POST.get('email', '')
+        nickname = request.POST.get('nickname', '')
+        sex = request.POST.get('sex', '0')
+        city = request.POST.get('city', '未知')
+        sign = request.POST.get('sign', '')
+        if email != '' and email != request.user.email:
+            request.user.email = email
+            request.user.is_mail_active = False
+            data['is_mail_change'] = True
+        if nickname != '' and nickname != request.user.nickname:
+            request.user.nickname = nickname
+        if sex == '1':
+            sex = 1
+        else:
+            sex = 0
+        if sex != request.user.sex:
+            request.user.sex = sex
+        if city != '未知' and city != request.user.city:
+            request.user.city = city
+        if sign != '' and sign != request.user.desc:
+            request.user.desc = sign
+        request.user.save()
+        data['status'] = 'SUCCESS'
+
+    return JsonResponse(data)
+
+
+def change_password(request):
+    data = {
+        'status': 'ERROR',
+        'message': 'ERROR, 请稍后重试',
+    }
+    if request.user is None:
+        data['message'] = '未登录, 请登陆后继续操作'
+        return JsonResponse(data)
+
+    if request.method == 'POST':
+        now_password = request.POST.get('now_password', '')
+        new_password = request.POST.get('new_password', '')
+        re_password = request.POST.get('re_password', '')
+        print(now_password, new_password, re_password)
+        user = auth.authenticate(username=request.user.username, password=now_password)
+        print(user)
+        if user is None:
+            data['message'] = '密码错误'
+            return JsonResponse(data)
+        if len(new_password) < 6 or len(new_password) > 16:
+            data['message'] = '密码长度不合法'
+            return JsonResponse(data)
+        if new_password != re_password:
+            data['message'] = '两次输入的密码不一致'
+            return JsonResponse(data)
+        request.user.set_password(new_password)
+        request.user.save()
+    auth.logout(request)
+    data['status'] = 'SUCCESS'
     return JsonResponse(data)

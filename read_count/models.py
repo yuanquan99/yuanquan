@@ -13,6 +13,8 @@ class ReadNum(models.Model):
 
     class Meta:
         ordering = ['-read_num']
+        verbose_name = '阅读数量'
+        verbose_name_plural = verbose_name
 
 
 class ReadDetail(models.Model):
@@ -34,3 +36,6 @@ class ReadDetail(models.Model):
 
     class Meta:
         ordering = ['-data']
+        verbose_name = '阅读数量(按日期分)'
+        verbose_name_plural = verbose_name
+

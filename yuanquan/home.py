@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from article.models import Article, ArticleType
 from django.core.paginator import Paginator
@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.conf import settings
 from read_count.utils import get_hot_article
+from notifications.models import Notification
 
 
 def home(request):
@@ -53,7 +54,9 @@ def search(request):
 
 
 def test(request):
-    return render(request, 'test.html')
+    from comment.forms import CommentForm
+    commonform = CommentForm()
+    return render(request, 'user/activate.html', context={'commonform': commonform})
 
 
 def info(request):
@@ -62,6 +65,10 @@ def info(request):
 
 def record(request):
     return render(request, 'record.html')
+
+
+def error404(request):
+    return render(request, '404.html')
 
 
 def load_file(request):
@@ -88,3 +95,14 @@ def delete_all_notification(request):
     notifications = request.user.notifications.read()
     notifications.delete()
     return redirect(reverse('all_notifications'))
+
+
+def delete_notification(request):
+    notification_id = request.GET.get('notification_id', '')
+    notification = get_object_or_404(Notification, recipient=request.user, id=notification_id)
+    print(notification)
+    notification.delete()
+    data = {
+        'status': 'SUCCESS'
+    }
+    return JsonResponse(data)
