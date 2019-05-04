@@ -93,8 +93,9 @@ i{font-style: normal;}
 
 /* 辅助 */
 a:hover{color: #009688; transition: all .3s;}
+/*
 pre{padding: 10px 15px; margin: 10px 0; font-size: 12px; border-left: 6px solid #009688;  background-color: #f8f8f8; font-family: Courier New; overflow: auto;}
-
+*/
 .layui-container{padding: 0;}
 .fly-main{width: 1079px; min-height: 600px; margin: 0 auto 15px;}
 .layui-badge{height: 20px; line-height: 20px; border-radius: 2px;}
@@ -247,7 +248,7 @@ pre{padding: 10px 15px; margin: 10px 0; font-size: 12px; border-left: 6px solid 
 
 .fly-list-info{position: relative; font-size: 13px; color: #999;}
 .fly-list-info>*{padding-right: 15px;}
-.fly-list-info a[link]{color: #999;}
+.fly-list-info a[link]{/*color: #999;*/color: #fe2424;}
 .fly-list-info a[link]:hover{color: #5FB878;}
 .fly-list-info .icon-renzheng{position: relative; top: 1px; margin-right: 3px;}
 .fly-list-info .fly-badge-vip{position: relative; margin-left: 2px;}
@@ -336,7 +337,7 @@ body .layui-edit-face  .layui-layer-content{padding:0; background-color:#fff; co
 .detail-about .fly-jing{padding:0 6px; background-color:#c00; color:#fff;}
 .detail-about .detail-hits{position: relative; top: 5px; line-height: 20px;}
 .fly-detail-user{white-space: nowrap; overflow: hidden;}
-.fly-detail-user a{padding-right: 10px; font-size: 14px;}
+.fly-detail-user a{/*padding-right: 10px;*/ font-size: 14px;}
 .fly-detail-user .icon-renzheng{top: 1px;}
 
 .detail-hits span{height: 20px; line-height: 20px;}

@@ -8,6 +8,19 @@
   fill: currentColor;
   vertical-align: text-bottom;
 }
+.markdown-body li {
+    list-style: unset;
+}
+
+.markdown-body .zan a {
+    color: #333;
+    text-decoration: none;
+}
+
+.markdown-body .zan a:hover {
+  color: #009688;
+  text-decoration: none;
+}
 
 .markdown-body .anchor {
   float: left;
@@ -207,7 +220,7 @@
 }
 
 .markdown-body h1 {
-  font-size: 2em;
+  font-size: 2em!important;
   margin: .67em 0;
 }
 

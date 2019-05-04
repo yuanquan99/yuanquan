@@ -74,3 +74,12 @@ layui-table th {
 .active {
     color: #009688!important;
 }
+
+.editormd {
+    height: 500px!important;
+    font: 16px/150% Arial,Verdana,"宋体";
+}
+
+.user-name a[link] {
+    color: #01AAED!important;
+}
