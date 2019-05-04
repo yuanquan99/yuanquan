@@ -12,7 +12,7 @@
                     <li><a href="{% url "register" %}">注册</a></li>
                 </ul>
                 {% if not user.is_authenticated %}
-                    <div class="layui-form layui-form-pane layui-col-xs4 layui-col-xs-offset4" style="float: none; margin-top: 30px">
+                    <div class="layui-form layui-form-pane layui-col-md4 layui-col-md-offset4" style="float: none; margin-top: 30px">
                         <form method="post" action="">
                             {% csrf_token %}
                             {% for field in login_form %}

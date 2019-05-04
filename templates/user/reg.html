@@ -7,32 +7,32 @@
     <div class="fly-panel fly-panel-user" pad20>
         <div class="layui-tab layui-tab-brief" lay-filter="user" style="text-align: center!important;">
 
+            {% if not user.is_authenticated %}
             <ul class="layui-tab-title">
                 <li><a href={% url "login" %}>登入</a></li>
                 <li class="layui-this">注册</li>
             </ul>
-            {% if not user.is_authenticated %}
-                <div class="layui-tab-item layui-show layui-form-pane">
+            <div class="layui-tab-item layui-show layui-form-pane">
 
-                     <div class="layui-form layui-form-pane layui-col-xs4 layui-col-xs-offset4" style="float: none; margin-top: 30px">
-                        <form method="post" action="#">
-                            {% csrf_token %}
-                            {% for field in reg_form %}
-                                <div class="layui-form-item">
-                                    <label for="{{ field.id_for_label }}" class="layui-form-label">{{ field.label }}</label>
-                                    <div class="layui-input-block">{{ field }}</div>
-                                    <span>{{ field.errors.as_text }}</span>
-                                </div>
-
-                            {% endfor %}
-                            <span class="text-danger">{{ reg_form.non_field_errors }}</span>
-                            <div class="layui-form-item" style="margin-top: 30px">
-                                <button class="layui-btn" type="submit">注册</button>
+                 <div class="layui-form layui-form-pane layui-col-md4 layui-col-md-offset4" style="float: none; margin-top: 30px">
+                    <form method="post" action="#">
+                        {% csrf_token %}
+                        {% for field in reg_form %}
+                            <div class="layui-form-item">
+                                <label for="{{ field.id_for_label }}" class="layui-form-label">{{ field.label }}</label>
+                                <div class="layui-input-block">{{ field }}</div>
+                                <span>{{ field.errors.as_text }}</span>
                             </div>
-                        </form>
 
-                    </div>
+                        {% endfor %}
+                        <span class="text-danger">{{ reg_form.non_field_errors }}</span>
+                        <div class="layui-form-item" style="margin-top: 30px">
+                            <button class="layui-btn" type="submit">注册</button>
+                        </div>
+                    </form>
+
                 </div>
+            </div>
             {% else %}
                 <span>已登录，跳转到首页...</span>
                 <script type="text/javascript">

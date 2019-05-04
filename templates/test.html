@@ -1,23 +1,74 @@
-{% extends 'template.html' %}
+{% extends "template.html" %}
+
+{% block title %}测试{% endblock %}
 
 {% block body %}
+    <div class="layui-container fly-marginTop">
+        <div class="fly-panel fly-panel-user" pad20>
+            <div class="layui-tab layui-tab-brief" lay-filter="user">
+                <p>das</p>
+                <button id="id">点击</button>
+                <form method="post">
+                    <div class="layui-form-item layui-form-text">
 
+                        <div class="layui-input-block">
+                            <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
 
-    <div class="container" style="background: white">
-        <p>AAAA</p>
+                <style>
+                    .btn-add-tag {
+                        display: block;
+                        padding: 0;
+                        background-color: transparent;
+                        border: none;
+                        color: #349EDF;
+                        font-size: 14px;
+                        line-height: 32px;
+                        outline: none;
+                        margin: 0 10px;
+                    }
+                </style>
 
-
-
-        <p></p>
-
-        <span class="tag"></span>
-
-        <div class="tag-container">
-            <span class="tags-input">XAS</span>
-            <p class="tag-label" style="">ADSF</p>
+                <script></script>
+            </div>
         </div>
-        <img src="/media/pic/yuanquan_15542955602.jpg" alt="aaa">
-        <img src="/static/user_pic/yuanquan_15542955602.jpg" alt="bbb" width="100px" height="100px">
     </div>
 
 {% endblock %}
+
+{% block add_script %}
+    <script>
+        window.onload = function () {
+
+        };
+        $('#id').on('click', function () {
+            var jubao = '<textarea name="" required lay-verify="required" placeholder="请输入" class="layui-textarea"></textarea>';
+            var index = layer.open({
+                title: '请输入举报理由',
+                content: jubao,
+                btn: ['确认', '取消',],
+                yes: function (index, layero) {
+                    layer.msg('举报成功');
+                },
+                btn2: function (index, layero) {
+                },
+                cancel: function () {
+                }
+            });
+            layer.style(index, {
+                width: '500px',
+            });
+        });
+    </script>
+{% endblock %}
+
+</body>
+</html>

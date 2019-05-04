@@ -18,7 +18,12 @@
             <div class="layui-tab layui-tab-brief" lay-filter="user" >
 
                 <ul class="layui-tab-title" style="padding: 0 10px">
-                    <li class="layui-this">发表新帖<!-- 编辑帖子 --></li>
+                    {% if edit_ %}
+                        <li class="layui-this">编辑帖子</li>
+                    {% else %}
+                        <li class="layui-this">发表新帖<!-- 编辑帖子 --></li>
+                    {% endif %}
+
                 </ul>
 
                 <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding-top: 20px ;">
@@ -31,6 +36,16 @@
                                     <div class="layui-input-block">
                                         <select  name="type" lay-filter="column" lay-verify="required">
                                             <option></option>
+                                            {% if request.user.is_superuser %}
+                                            {% for type in admin_types %}
+                                                {% if type == article.type %}
+                                                    <option value="{{ type.type_name }}" selected>{{ type.type_name }}</option>
+                                                {% else %}
+                                                    <option value="{{ type.type_name }}">{{ type.type_name }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% endif %}
+
                                             {% for type in types %}
                                                 {% if type == article.type %}
                                                     <option value="{{ type.type_name }}" selected>{{ type.type_name }}</option>
@@ -50,14 +65,18 @@
                                 </div>
                             </div>
 
-                            <div class="layui-form-item layui-form-text">
+                            <div class="layui-row layui-form-item">
+                                <label for="tags" class="layui-form-label">标签</label>
                                 <div class="layui-input-block">
-                                    <textarea id="article" name="content"
-                                              placeholder="详细描述" class="layui-textarea fly-editor" lay-verify="required"
-                                              style="height: 400px">{{ article.content }}</textarea>
+                                  <input type="text" name="tags" id="tags" autocomplete="off"
+                                         placeholder="请输入文章tag, 多个tag请以';'分割 (最多添加5个标签)"
+                                         class="layui-input">
                                 </div>
                             </div>
 
+                            {% for field in article_from %}
+                                {{ field }}
+                            {% endfor %}
                             <div class="layui-form-item" style="text-align: right">
                                 <button class="layui-btn" type="submit" id="add_article">确定</button>
                             </div>
@@ -68,7 +87,13 @@
         </div>
 
         {% else %}
-
+            <script>
+                window.setTimeout("location.href='/login';", 1000);
+                layui.use('layer', function(){
+                var layer = layui.layer;
+                    layer.msg('您尚未登录, 请先登录');
+                });
+            </script>
         {% endif %}
 
 
@@ -80,11 +105,61 @@
 
 
 {% block add_script %}
-    <script>
+    <script type="text/javascript">
+
+    window.onload = function() {
+        $("#id_content").removeAttr('required');
+        var text = (function(){/*{{ article.content }}*/}).toString().split('/*')[1].split('*/')[0];
+        var reg = new RegExp("&#39;","g");
+        text = text.replace(reg, '\'');
+        reg = new RegExp('&amp;',"g");
+        text = text.replace(reg, '&');
+        reg = new RegExp('&gt;',"g");
+        text = text.replace(reg, '>');
+        reg = new RegExp('&lt;',"g");
+        text = text.replace(reg, '<');
+        MarkDownEditor.cm.setValue(text)
+        var tags = '';
+        {% for tag_ in article.tags.all %}
+            if (tags == '') tags = '{{ tag_ }}';
+            else tags = tags + ';' + '{{ tag_ }}';
+        {% endfor %}
+
+        $("#tags").val(tags);
+    }
     $("#add_article").click(function () {
-        console.log(100);
+        if(document.getElementsByClassName('editormd-html-textarea')[0].innerText == "") {
+            layer.msg('内容不能为空');
+            return false;
+        }
+        var tags = $('#tags').val();
+        var num = 0;
+        for (var i = 0; i < tags.length; i++) {
+            if (tags[i] == ';') num++;
+        }
+        if(num >= 5) {
+            layer.msg("最多只能添加5个标签哦~");
+            return false;
+        }
     });
 
+    $(function() {
+        var num = 0, flag = 0;
+        $('#tags').bind('input propertychange', function () {
+            var tags = $("#tags").val();
+            if (tags[tags.length - 1] == ';') num += 1;
+            if (num == 5 && flag == 0) {
+                layer.msg('最多只能添加5个标签哦~');
+                flag = 1;
+            }
+            if (num < 5) flag = 0;
+        });
+    });
+
+    function not_login() {
+        //layer.msg('您尚未登录, 请先登录');
+        window.location.href = '/';
+    }
 
     </script>
 {% endblock %}

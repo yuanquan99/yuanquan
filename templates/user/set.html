@@ -2,11 +2,12 @@
 {% block title %}我的主页{% endblock %}
 
 {% block body %}
-
+{% if request.user.is_authenticated %}
 <div class="layui-container fly-marginTop fly-user-main">
+
     <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
         <li class="layui-nav-item">
-            <a href={% url 'my_home' %}>
+            <a href="{% url 'user_home' request.user.username %}">
                 <i class="layui-icon">&#xe609;</i>
                 我的主页
             </a>
@@ -14,7 +15,7 @@
         <li class="layui-nav-item">
             <a href="{% url 'user_info' %}">
                 <i class="layui-icon">&#xe612;</i>
-                用户中心
+                我的帖子
             </a>
         </li>
         <li class="layui-nav-item layui-this">
@@ -52,22 +53,25 @@
             <div class="layui-tab-content" style="padding: 20px 0;">
                 <div class="layui-form layui-form-pane layui-tab-item layui-show">
                     <form method="post" id="change_user_info">
+                        {% csrf_token %}
                         <div class="layui-form-item">
                             <label for="L_email" class="layui-form-label">邮箱</label>
                             <div class="layui-input-inline">
                                 <input type="text" id="email" name="email" required lay-verify="email"
                                        autocomplete="off" value="{{ request.user.email }}" class="layui-input">
                             </div>
-                            {% if not ruquest.user.is_mail_active %}
-                                <div class="layui-form-mid layui-word-aux">您的邮箱尚未激活, 现在就去
-                                    <a href="activate.html" style="font-size: 12px; color: #4f99cf;">验证邮箱</a>吧。
-                                </div>
-                            {% endif %}
+
+                            <div class="layui-form-mid layui-word-aux" id="active_mail">
+                                {% if not ruquest.user.is_mail_active %}
+                                您的邮箱尚未激活, 现在就去<a href="activate.html" style="font-size: 12px; color: #4f99cf;">验证邮箱</a>吧。
+                                {% endif %}
+                            </div>
+
                         </div>
                         <div class="layui-form-item">
                             <label for="L_username" class="layui-form-label">昵称</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="nickname" name="username" required lay-verify="required"
+                                <input type="text" id="nickname" name="nickname" required lay-verify="required"
                                        autocomplete="off" value="{{ request.user.nickname }}" class="layui-input">
                             </div>
                             <div class="layui-inline">
@@ -81,14 +85,14 @@
                             <label for="city" class="layui-form-label">城市</label>
                             <div class="layui-input-inline">
                                 <input type="text" id="L_city" name="city" autocomplete="off" class="layui-input"
-                                       value="{% if request.user.city != "未知" %} {{ request.user.city }}{% endif %}">
+                                       value="{% if request.user.city != "未知" %}{{ request.user.city }}{% endif %}">
                             </div>
                         </div>
                         <div class="layui-form-item layui-form-text">
                             <label for="sign" class="layui-form-label">签名</label>
                             <div class="layui-input-block">
                                 <textarea placeholder="随便写些什么刷下存在感" id="sign" name="sign" autocomplete="off"
-                                          class="layui-textarea" style="height: 80px;">{{ request.user.desc }}
+                                          class="layui-textarea" style="height: 80px;">
                                 </textarea>
                             </div>
                         </div>
@@ -112,26 +116,27 @@
                 </div>
 
                 <div class="layui-form layui-form-pane layui-tab-item">
-                    <form method="post">
+                    <form method="post" id="change_password">
+                        {% csrf_token %}
                         <div class="layui-form-item">
-                            <label for="L_nowpass" class="layui-form-label">当前密码</label>
+                            <label for="now_password" class="layui-form-label">当前密码</label>
                             <div class="layui-input-inline">
-                                <input type="password" id="L_nowpass" name="nowpass" required lay-verify="required"
+                                <input type="password" id="now_password" name="now_password" required lay-verify="required"
                                        autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label for="L_pass" class="layui-form-label">新密码</label>
+                            <label for="new_password" class="layui-form-label">新密码</label>
                             <div class="layui-input-inline">
-                                <input type="password" id="L_pass" name="pass" required lay-verify="required"
+                                <input type="password" id="new_password" name="new_password" required lay-verify="required"
                                        autocomplete="off" class="layui-input">
                             </div>
                             <div class="layui-form-mid layui-word-aux">6到16个字符</div>
                         </div>
                         <div class="layui-form-item">
-                            <label for="L_repass" class="layui-form-label">确认密码</label>
+                            <label for="re_password" class="layui-form-label">确认密码</label>
                             <div class="layui-input-inline">
-                                <input type="password" id="L_repass" name="repass" required lay-verify="required"
+                                <input type="password" id="re_password" name="re_password" required lay-verify="required"
                                        autocomplete="off" class="layui-input">
                             </div>
                         </div>
@@ -146,7 +151,9 @@
         </div>
     </div>
 </div>
-
+{% else %}
+    {% include 'common/error404.html' %}
+{% endif %}
 {% endblock %}
 
 {% block add_script %}
@@ -173,8 +180,54 @@
         }
     });
 
+    window.onload = function() {
+        $("#sign").text('{{ request.user.desc }}')
+    }
+
     $("#change_user_info").submit(function () {
-        $.ajax
+        $.ajax({
+            url: '{% url 'change_user_info' %}',
+            type: 'POST',
+            data: $(this).serialize(),
+            cache: false,
+            success: function (data) {
+                if (data['status'] == 'SUCCESS') {
+                    layer.msg('修改成功');
+                    if (data['is_mail_change'] == true) {
+                        console.log('false');
+                        var a = document.createElement("a");
+                        var a_Text = document.createTextNode("验证邮箱");
+                        a.setAttribute("href","activate.html");
+                        a.setAttribute("style","font-size: 12px; color: #4f99cf;");
+                        a.appendChild(a_Text);
+                        $("#active_mail").text('');
+                        $("#active_mail").append('您的邮箱已修改, 现在就去').append(a).append('吧!');
+                    }
+                } else {
+                    layer.msg(data['message']);
+                }
+            }
+        });
+        return false;
+    });
+
+    $("#change_password").submit(function () {
+        $.ajax({
+            url: '{% url 'change_password' %}',
+            type: 'POST',
+            data: $(this).serialize(),
+            cache: false,
+            success: function (data) {
+                console.log(data);
+                if (data['status'] == 'SUCCESS') {
+                    layer.msg('密码修改成功, 正在跳转到登录页面, 请稍后...');
+                    window.setTimeout("location.href='/login';", 2000);
+                } else {
+                    layer.msg(data['message']);
+                }
+            }
+        });
+        return false;
     });
 
 });

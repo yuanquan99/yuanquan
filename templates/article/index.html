@@ -13,15 +13,14 @@
                 <div class="fly-panel" style="margin-bottom: 0;">
 
                     <div class="fly-panel-title fly-filter">
-                        <a href="" class="layui-this">最新回复</a>
+                        <a href="?type=0" class="{% if type == '0' %}layui-this{% endif %}">最近发表</a>
                         <span class="fly-mid"></span>
-                        <a href="">最近发表</a>
+                        <a href="?type=1" class="{% if type == '1' %}layui-this{% endif %}">最新回复</a>
                         <span class="fly-mid"></span>
-                        <a href="">最热</a>
+                        <a href="?type=2" class="{% if type == '2' %}layui-this{% endif %}">最热</a>
                         <span class="fly-mid"></span>
-                        <a href="">精华</a>
-                        <span class="fly-filter-right layui-hide-xs"> <a href="" class="layui-this">按最新</a>
-                        <span class="fly-mid"></span><a href="">按热议</a></span>
+                        <a href="?type=3" class="{% if type == '3' %}layui-this{% endif %}">精华</a>
+
                     </div>
 
                     <ul class="fly-list">
@@ -43,9 +42,6 @@
                                 {% endfor %}
                             {% else %}
                                  <h2>
-                                    <!--
-                                    <a class="layui-badge">{{ article.type }}</a>
-                                    -->
                                     <a href={% url "article_detail" article.pk %}>{{ article.title }}</a>
                                 </h2>
                             {% endif %}
@@ -55,19 +51,23 @@
                                 {% endif %}
                             </div>
                             <div class="fly-list-info">
-                                <a href={% url "my_home" %} link>
+                                <a href="{% url 'user_home' article.author.username %}" link>
                                     <cite>{{ article.author }}</cite>
-                                    <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
-                                    <i class="layui-badge fly-badge-vip">VIP3</i>
+                                    {% if article.author.info %}
+                                        <i class="iconfont icon-renzheng" title="认证信息:{{ article.author.info.name }}"></i>
+                                        <!--
+                                        <i class="layui-badge fly-badge-vip">{{ article.author.info.name }}</i>
+                                        -->
+                                    {% endif %}
                                 </a>
-                                <span>{{ article.create_time|date:"Y-m-d" }} 发表在 &nbsp;[
+                                <span class="layui-hide-xs">{{ article.create_time|date:"Y-m-d" }} 发表在 &nbsp;[
                                     <a href="">{{ article.type }}</a>
                                     ]
                                 </span>
                                 <span class="fly-list-nums">
                                     回复 {{ article.comment_set.all|length }} &nbsp;&nbsp;|&nbsp;&nbsp;
                                     赞 {% get_like_count article %} &nbsp;&nbsp;|&nbsp;&nbsp;
-                                    浏览 {{ article.read_num }}
+                                    浏览 {{ article.get_read_num }}
                                 </span>
                             </div>
                         </li>
@@ -79,22 +79,25 @@
 
                     <div style="text-align: center">
                         <div class="laypage-main">
-                            {% if page_articles.has_previous %}
-                                <a href="?page={{ page_articles.previous_page_number }}" class="laypage-prev">上一页</a>
+                            {% if articles.has_previous %}
+                                <a href="?type={{ type }}&page={{ articles.previous_page_number }}" class="laypage-prev">上一页</a>
 
                             {% endif %}
 
-                            {% for page_num in page_articles.paginator.page_range %}
-                                {% if page_articles.number == page_num %}
-                                    <a href="?page={{ page_num }}" class="laypage-curr">{{ page_num }}</a>
+                            {% for page_num in page_range %}
+                                {% if page_num == articles.number %}
+                                    <a class="laypage-curr">{{ page_num }}</a>
                                 {% else %}
-                                    <a href="?page={{ page_num }}">{{ page_num }}</a>
+                                    {% if page_num == '...' %}
+                                        <a href="javascript:void(0);"><span>{{ page_num }}</span></a>
+                                    {% else %}
+                                        <a href="?type={{ type }}&page={{ page_num }}">{{ page_num }}</a>
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
-                            <span>…</span>
 
-                            {% if page_articles.has_next %}
-                                <a href="?page={{ page_articles.next_page_number }}"class="laypage-next">下一页</a>
+                            {% if articles.has_next %}
+                                <a href="?type={{ type }}&page={{ articles.next_page_number }}"class="laypage-next">下一页</a>
                             {% endif %}
                         </div>
                     </div>

@@ -1,11 +1,11 @@
 {% extends "template.html" %}
 {% block title %}我的消息{% endblock %}
 {% block body %}
-
+{% if request.user.is_authenticated %}
     <div class="layui-container fly-marginTop fly-user-main">
         <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
             <li class="layui-nav-item">
-                <a href={% url "my_home" %}>
+                <a href="{% url 'user_home' request.user.username %}">
                     <i class="layui-icon">&#xe609;</i>
                     我的主页
                 </a>
@@ -13,7 +13,7 @@
             <li class="layui-nav-item">
                 <a href={% url "user_info" %}>
                     <i class="layui-icon">&#xe612;</i>
-                    用户中心
+                    我的帖子
                 </a>
             </li>
             <li class="layui-nav-item">
@@ -50,19 +50,19 @@
                     {% else %}
                         <a class="layui-btn layui-btn-danger" href="{% url 'delete_all_notification' %}">清空全部消息</a>
                     {% endif %}
-                    <ul class="mine-msg">
+                    <ul class="mine-msg" id="all_notifications">
                         {% for notification in request.user.notifications.all %}
-                            <li>
+                            <li id="notification_{{ notification.pk }}">
                                 <blockquote class="layui-elem-quote">
                                     <a href="{{ notification.data.author_url }}" target="_blank"><cite>{{ notification.data.author_ }}</cite></a>评论了您的帖子
                                     <a target="_blank" href="{{ notification.data.article_url }}">
                                         <cite>{{ notification.data.title_ }}</cite>
                                     </a>
-                                    : {{ notification.verb }}
+                                    : {{ notification.verb|striptags }}
                                 </blockquote>
                                 <p>
                                     <span>{{ notification.timesince }}前</span>
-                                    <a href="javascript:;" class="layui-btn layui-btn-small layui-btn-danger">删除</a>
+                                    <button onclick="delete_notification({{ notification.pk }})" class="layui-btn layui-btn-small layui-btn-danger">删除</button>
                                 </p>
                             </li>
                         {% endfor %}
@@ -73,6 +73,9 @@
 
     </div>
 
+{% else %}
+    {% include 'common/error404.html' %}
+{% endif %}
 {% endblock %}
 
 {% block add_script %}
@@ -86,5 +89,17 @@
                 console.log('全部标记已读');
             }
         }
+        function delete_notification(notification_id) {
+            $.ajax({
+                url: '{% url 'delete_notification' %}',
+                type: 'GET',
+                data: {'notification_id':notification_id },
+                cache: false,
+                success: function (data) {
+                    $("#notification_" + notification_id).remove()
+                }
+            });
+        }
+
     </script>
 {% endblock %}
