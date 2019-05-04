@@ -1,5 +1,4 @@
 from django.contrib.contenttypes.models import ContentType
-from django.shortcuts import render, get_object_or_404
 from article.models import Article
 from django.http import JsonResponse
 from django.db.models import ObjectDoesNotExist
@@ -10,6 +9,7 @@ from django.utils import timezone
 
 def add_comment(request, article_id):
     data = {}
+    print(request.POST)
     if request.method == 'POST':
         try:
             article = Article.objects.get(pk=article_id)
@@ -17,7 +17,7 @@ def add_comment(request, article_id):
             data['status'] = 'FAIL'
             data['error'] = '评论的对象不存在'
             return JsonResponse(data)
-        content = request.POST.get('detail-comment', '')
+        content = request.POST.get('text', '')
         author = request.user
 
         if author is None:
@@ -34,6 +34,7 @@ def add_comment(request, article_id):
         data['is_louzhu'] = comment.author == article.author
         data['comment_time'] = comment.create_time.timestamp()
         data['comment_content'] = comment.content
+        data['comment_id'] = 'comment_' + str(comment.pk)
         ct = ContentType.objects.get_for_model(Article)
         readdetail, created = ReadDetail.objects.get_or_create(content_type=ct, object_id=article_id, data=timezone.now().date())
         readdetail.comment_num += 1
