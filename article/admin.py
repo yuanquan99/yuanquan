@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Article
-from .models import ArticleType, ArticleTag
+from .models import ArticleType, ArticleTag, Report
 
 
 @admin.register(Article)
@@ -34,6 +34,11 @@ class TypeAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ['id', 'tag_name', 'display']
     ordering = ['id']
+
+
+@admin.register(Report)
+class ReportAdmin(admin.ModelAdmin):
+    list_display = ['author', 'article', 'article_pk', 'liyou']
 
 
 admin.site.site_header = "HNUST ACM社区后台管理"
