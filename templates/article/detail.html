@@ -96,12 +96,12 @@
                         {% for comment in comments %}
                             <li>
                                 <div class="detail-about detail-about-reply" id="comment_{{ comment.pk }}">
-                                    <a class="fly-avatar" href="{% url 'user_home' comment.article.author.username %}">
+                                    <a class="fly-avatar" href="{% url 'user_home' comment.author.username %}">
                                         <img src="{{ comment.author.url }}"
                                              alt=" ">
                                     </a>
                                     <div class="fly-detail-user">
-                                        <a href="{% url 'user_home' comment.article.author.username %}" class="fly-link">
+                                        <a href="{% url 'user_home' comment.author.username %}" class="fly-link">
                                             {{ comment.author.username }}
                                             {% if comment.author.info %}
                                                 <i class="iconfont icon-renzheng" title="认证信息：ACMer"></i>

@@ -229,7 +229,7 @@
         function delete_article(article_id) {
             var index = layer.open({
                 title: '提示',
-                content: '帖子删除后不可恢复, 是否继续',
+                content: '帖子删除后不可恢复, 是否继续?',
                 btn: ['是', '否',],
                 yes: function(index, layero) {
                     $.ajax({

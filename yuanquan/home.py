@@ -56,7 +56,7 @@ def search(request):
 def test(request):
     from comment.forms import CommentForm
     commonform = CommentForm()
-    return render(request, 'user/activate.html', context={'commonform': commonform})
+    return render(request, 'test.html', context={'commonform': commonform})
 
 
 def info(request):

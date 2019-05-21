@@ -118,7 +118,7 @@
         text = text.replace(reg, '>');
         reg = new RegExp('&lt;',"g");
         text = text.replace(reg, '<');
-        MarkDownEditor.cm.setValue(text)
+        MarkDownEditor.cm.setValue(text);
         var tags = '';
         {% for tag_ in article.tags.all %}
             if (tags == '') tags = '{{ tag_ }}';
